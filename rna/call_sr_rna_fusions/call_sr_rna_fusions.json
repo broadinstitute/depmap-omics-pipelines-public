@@ -1,0 +1,20 @@
+{
+  "deleted": false,
+  "inputs": {
+    "call_sr_rna_fusions.analysis_ready_bam": "this.analysis_ready_bam",
+    "call_sr_rna_fusions.sample_id": "this.sample_id"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "call_sr_rna_fusions",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "call_sr_rna_fusions",
+  "outputs": {
+    "call_sr_rna_fusions.fusions": "this.fusions",
+    "call_sr_rna_fusions.fusions_discarded": "this.fusions_discarded"
+  },
+  "rootEntityType": "sample"
+}

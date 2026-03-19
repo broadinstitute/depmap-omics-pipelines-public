@@ -1,0 +1,25 @@
+{
+  "deleted": false,
+  "inputs": {
+    "call_mutations.ref_dict": "this.ref_dict",
+    "call_mutations.ref_fai": "this.ref_fasta_index",
+    "call_mutations.ref_fasta": "this.ref_fasta",
+    "call_mutations.sample_id": "this.sample_id",
+    "call_mutations.tumor_reads": "this.analysis_ready_bam",
+    "call_mutations.tumor_reads_index": "this.analysis_ready_bai"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "call_mutations",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "call_mutations",
+  "outputs": {
+    "call_mutations.filtered_vcf": "this.mut_vcf",
+    "call_mutations.filtered_vcf_idx": "this.mut_vcf_idx",
+    "call_mutations.filtering_stats": "this.mut_filtering_stats"
+  },
+  "rootEntityType": "sample"
+}

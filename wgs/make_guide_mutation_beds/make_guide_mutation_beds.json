@@ -1,0 +1,23 @@
+{
+  "deleted": false,
+  "inputs": {
+    "make_guide_mutation_beds.sample_id": "this.sample_id",
+    "make_guide_mutation_beds.vcf": "this.mut_annot_bcftools_fixed_vcf"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "make_guide_mutation_beds",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "make_guide_mutation_beds",
+  "outputs": {
+    "make_guide_mutation_beds.guide_bed_avana": "this.guide_bed_avana",
+    "make_guide_mutation_beds.guide_bed_brunello": "this.guide_bed_brunello",
+    "make_guide_mutation_beds.guide_bed_humagne": "this.guide_bed_humagne",
+    "make_guide_mutation_beds.guide_bed_ky": "this.guide_bed_ky",
+    "make_guide_mutation_beds.guide_bed_tko": "this.guide_bed_tko"
+  },
+  "rootEntityType": "sample"
+}

@@ -1,0 +1,27 @@
+{
+  "deleted": false,
+  "inputs": {
+    "call_structural_variants.ref_fasta": "this.ref_fasta",
+    "call_structural_variants.ref_fasta_index": "this.ref_fasta_index",
+    "call_structural_variants.sample_id": "this.sample_id",
+    "call_structural_variants.tumor_bai": "this.analysis_ready_bai",
+    "call_structural_variants.tumor_bam": "this.analysis_ready_bam"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "call_structural_variants",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "call_structural_variants",
+  "outputs": {
+    "call_structural_variants.sv_candidate_vcf": "this.sv_candidate_vcf",
+    "call_structural_variants.sv_candidate_vcf_index": "this.sv_candidate_vcf_index",
+    "call_structural_variants.sv_candidate_indel_vcf": "this.sv_candidate_indel_vcf",
+    "call_structural_variants.sv_candidate_indel_vcf_index": "this.sv_candidate_indel_vcf_index",
+    "call_structural_variants.sv_somatic_vcf": "this.sv_somatic_vcf",
+    "call_structural_variants.sv_somatic_vcf_index": "this.sv_somatic_vcf_index"
+  },
+  "rootEntityType": "sample"
+}

@@ -1,0 +1,59 @@
+{
+  "taskGroups": [
+    {
+      "taskSpec": {
+        "runnables": [
+          {
+            "displayName": "update-vep",
+            "script": {
+              "text": "bash /mnt/disks/ccleparams/scripts/update_vep.sh"
+            },
+            "environment": {
+              "variables": {
+                "GS_URL_PREFIX": "gs://ccleparams/wgs/mutation/annotation/vep"
+              }
+            }
+          }
+        ],
+        "computeResource": {
+          "cpuMilli": 2000,
+          "memoryMib": 8192,
+          "bootDiskMib": 120000
+        },
+        "volumes": [
+          {
+            "gcs": {
+              "remotePath": "ccleparams"
+            },
+            "mountPath": "/mnt/disks/ccleparams",
+            "mountOptions": [
+              "-o ro",
+              "-implicit-dirs",
+              "--billing-project depmap-omics"
+            ]
+          }
+        ],
+        "maxRetryCount": 0,
+        "maxRunDuration": "6000s"
+      },
+      "taskCount": 1,
+      "parallelism": 1
+    }
+  ],
+  "allocationPolicy": {
+    "instances": [
+      {
+        "policy": {
+          "machineType": "n2-standard-2",
+          "provisioningModel": "SPOT"
+        }
+      }
+    ],
+    "serviceAccount": {
+      "email": "omics-pipeline-runner@depmap-omics.iam.gserviceaccount.com"
+    }
+  },
+  "logsPolicy": {
+    "destination": "CLOUD_LOGGING"
+  }
+}

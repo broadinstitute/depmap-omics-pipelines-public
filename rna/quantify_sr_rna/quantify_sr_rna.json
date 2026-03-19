@@ -1,0 +1,23 @@
+{
+  "deleted": false,
+  "inputs": {
+    "quantify_sr_rna.sample_id": "this.sample_id",
+    "quantify_sr_rna.stranded": "this.delivery_stranded",
+    "quantify_sr_rna.transcriptome_bam": "this.transcriptome_bam"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "quantify_sr_rna",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "quantify_sr_rna",
+  "outputs": {
+    "quantify_sr_rna.quant_genes_auto": "this.quant_genes_auto",
+    "quantify_sr_rna.quant_genes_iu": "this.quant_genes_iu",
+    "quantify_sr_rna.quant_transcripts_auto": "this.quant_transcripts_auto",
+    "quantify_sr_rna.quant_transcripts_iu": "this.quant_transcripts_iu"
+  },
+  "rootEntityType": "sample"
+}

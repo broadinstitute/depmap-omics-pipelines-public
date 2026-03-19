@@ -1,0 +1,32 @@
+{
+  "deleted": false,
+  "inputs": {
+    "call_lr_rna_fusions.input_bam": "this.aligned_cram_bam",
+    "call_lr_rna_fusions.sample_id": "this.sample_id",
+    "call_lr_rna_fusions.sr_sample_id": "this.sr_omics_sequencing_id",
+    "call_lr_rna_fusions.sr_crai_bai": "this.sr_crai_bai",
+    "call_lr_rna_fusions.sr_cram_bam": "this.sr_cram_bam",
+    "call_lr_rna_fusions.sr_cram_or_bam": "this.sr_file_format",
+    "call_lr_rna_fusions.sr_ref_fasta": "this.sr_ref_fasta",
+    "call_lr_rna_fusions.sr_ref_fasta_index": "this.sr_ref_fasta_index"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "call_lr_rna_fusions",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "call_lr_rna_fusions",
+  "outputs": {
+    "call_lr_rna_fusions.fusion_report": "this.fusion_report",
+    "call_lr_rna_fusions.fusion_report_abridged": "this.fusion_report_abridged",
+    "call_lr_rna_fusions.fusion_report_html": "this.fusion_report_html",
+    "call_lr_rna_fusions.igv_tar": "this.fusion_igv_tar",
+    "call_lr_rna_fusions.prelim_fusion_report": "this.fusion_prelim_report",
+    "call_lr_rna_fusions.prelim_fusion_report_abridged": "this.fusion_prelim_report_abridged",
+    "call_lr_rna_fusions.sr_cram_bam_used": "this.fusion_sr_cram_bam_used",
+    "call_lr_rna_fusions.used_sr_evidence": "this.fusion_used_sr_evidence"
+  },
+  "rootEntityType": "sample"
+}

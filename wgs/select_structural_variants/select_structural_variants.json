@@ -1,0 +1,22 @@
+{
+  "deleted": false,
+  "inputs": {
+    "select_structural_variants.del_annotation": "this.sv_del_annotation",
+    "select_structural_variants.dup_annotation": "this.sv_dup_annotation",
+    "select_structural_variants.gene_annotation": "this.sv_annot_reannotated_bedpe",
+    "select_structural_variants.input_bedpe": "this.sv_annot_bedpe",
+    "select_structural_variants.sample_id": "this.sample_id"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "select_structural_variants",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "select_structural_variants",
+  "outputs": {
+    "select_structural_variants.sv_selected_somatic": "this.sv_selected_somatic"
+  },
+  "rootEntityType": "sample"
+}

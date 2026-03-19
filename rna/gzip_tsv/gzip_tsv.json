@@ -1,0 +1,18 @@
+{
+  "deleted": false,
+  "inputs": {
+    "gzip_tsv.in_tsv": "this.star_junctions"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "gzip_tsv",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "gzip_tsv",
+  "outputs": {
+    "gzip_tsv.out_tsv": "this.star_junctions_gzip"
+  },
+  "rootEntityType": "sample"
+}

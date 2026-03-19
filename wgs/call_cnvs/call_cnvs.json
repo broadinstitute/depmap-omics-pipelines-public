@@ -1,0 +1,24 @@
+{
+  "deleted": false,
+  "inputs": {
+    "call_cnvs.bam": "this.analysis_ready_bam",
+    "call_cnvs.ref_fasta": "this.ref_fasta",
+    "call_cnvs.sample_id": "this.sample_id"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "call_cnvs",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "call_cnvs",
+  "outputs": {
+    "call_cnvs.bin_coverage": "this.cnv_bin_coverage",
+    "call_cnvs.cn_by_gene_weighted_mean":  "this.cnv_cn_by_gene_weighted_mean",
+    "call_cnvs.input_params":  "this.cnv_input_params",
+    "call_cnvs.read_cov_bin": "this.cnv_read_cov_bin",
+    "call_cnvs.segments": "this.cnv_segments"
+  },
+  "rootEntityType": "sample"
+}
