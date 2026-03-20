@@ -1,8 +1,8 @@
 {
   "deleted": false,
   "inputs": {
-    "quantify_lr_rna.input_bai": "this.aligned_crai_bai",
-    "quantify_lr_rna.input_bam": "this.aligned_cram_bam",
+    "quantify_lr_rna.input_bai": "this.analysis_ready_crai_bai",
+    "quantify_lr_rna.input_bam": "this.analysis_ready_cram_bam",
     "quantify_lr_rna.sample_id": "this.sample_id",
     "quantify_lr_rna.sr_star_junctions": "this.sr_star_junctions"
   },

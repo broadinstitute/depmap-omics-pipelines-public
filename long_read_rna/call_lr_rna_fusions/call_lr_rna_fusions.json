@@ -1,7 +1,7 @@
 {
   "deleted": false,
   "inputs": {
-    "call_lr_rna_fusions.input_bam": "this.aligned_cram_bam",
+    "call_lr_rna_fusions.input_bam": "this.analysis_ready_cram_bam",
     "call_lr_rna_fusions.sample_id": "this.sample_id",
     "call_lr_rna_fusions.sr_sample_id": "this.sr_omics_sequencing_id",
     "call_lr_rna_fusions.sr_crai_bai": "this.sr_crai_bai",

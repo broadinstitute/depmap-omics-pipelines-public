@@ -1,8 +1,8 @@
 {
   "deleted": false,
   "inputs": { 
-    "requantify_lr_rna.input_bai": "this.aligned_crai_bai",
-    "requantify_lr_rna.input_bam": "this.aligned_cram_bam",
+    "requantify_lr_rna.input_bai": "this.analysis_ready_crai_bai",
+    "requantify_lr_rna.input_bam": "this.analysis_ready_cram_bam",
     "requantify_lr_rna.ref_annotation_db": "this.ref_annotation_db",
     "requantify_lr_rna.sample_id": "this.sample_id",
     "requantify_lr_rna.transcript_counts": "this.transcript_counts"
