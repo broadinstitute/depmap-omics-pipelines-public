@@ -1,0 +1,22 @@
+{
+  "drop_info_fields": ["ANN", "LOF", "NMD"],
+  "type_overrides": {
+    "CSQ": { "number": "1" }
+  },
+  "compound_info_field_map": {
+    "CSQ": [
+      {
+        "split": "\\s*\\|\\s*"
+      }
+    ]
+  },
+  "url_encoded_field_name_regexes": [
+    "^civic_desc$",
+    "^clndn$",
+    "^clnvi$",
+    "^oc_",
+    "^oncokb_muteff$",
+    "^oncokb_oncogenic$",
+    "^hgnc"
+  ]
+}

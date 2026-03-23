@@ -4,6 +4,7 @@ workflow annotate_mutations_merge {
     input {
         String sample_id
         Array[File] input_vcfs
+        File? vcf_to_duckdb_config
     }
 
     call merge_info {
@@ -20,7 +21,8 @@ workflow annotate_mutations_merge {
     call vcf_to_duckdb {
         input:
             vcf = merge_info.vcf_info_merged,
-            vcf_index = index_vcf.vcf_index
+            vcf_index = index_vcf.vcf_index,
+            config = vcf_to_duckdb_config
     }
 
     output {
@@ -121,6 +123,7 @@ task vcf_to_duckdb {
     input {
         File vcf
         File vcf_index
+        File? config
         Int batch_size = 1000000
 
         String docker_image = "us-central1-docker.pkg.dev/depmap-omics/terra-images/vcf-to-duckdb"
@@ -146,7 +149,7 @@ task vcf_to_duckdb {
             --db="tmp.duckdb" \
             --parquet-dir="./parq" \
             --no-multiallelics \
-            --config="/app/config.json" \
+            ~{"--config " + config} \
             --batch-size=~{batch_size} \
             --compression-level=15 \
             --tmp-dir="./data/tmp" \

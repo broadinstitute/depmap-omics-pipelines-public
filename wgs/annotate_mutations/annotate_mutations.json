@@ -17,8 +17,6 @@
   "name": "annotate_mutations",
   "outputs": {
     "annotate_mutations.mut_annot_bcftools_vcf": "this.mut_annot_bcftools_vcf",
-    "annotate_mutations.mut_annot_snpeff_snpsift_vcf": "this.mut_annot_snpeff_snpsift_vcf",
-    "annotate_mutations.mut_annot_open_cravat_vcf": "this.mut_annot_open_cravat_vcf",
     "annotate_mutations.mut_annot_vep_vcf": "this.mut_annot_vep_vcf"
   },
   "rootEntityType": "sample"

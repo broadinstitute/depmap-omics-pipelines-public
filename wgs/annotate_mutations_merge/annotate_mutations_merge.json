@@ -1,7 +1,7 @@
 {
   "deleted": false,
   "inputs": {
-    "annotate_mutations_merge.input_vcfs": "[this.mut_annot_bcftools_vcf, this.mut_annot_snpeff_snpsift_vcf, this.mut_annot_open_cravat_vcf, this.mut_annot_vep_vcf]",
+    "annotate_mutations_merge.input_vcfs": "[this.mut_annot_bcftools_vcf, this.mut_annot_vep_vcf]",
     "annotate_mutations_merge.sample_id": "this.sample_id"
   },
   "methodConfigVersion": 1,
