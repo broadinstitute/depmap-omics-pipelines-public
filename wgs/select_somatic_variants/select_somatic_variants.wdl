@@ -7,7 +7,6 @@ workflow select_somatic_variants {
         Float min_af = 0.15
         Int min_depth = 5
         Float max_pop_af = 0.00001
-        Float max_brca1_func_assay_score = -1.328
         Boolean save_enriched_variants = false
     }
 
@@ -18,7 +17,6 @@ workflow select_somatic_variants {
             min_af = min_af,
             min_depth = min_depth,
             max_pop_af = max_pop_af,
-            max_brca1_func_assay_score = max_brca1_func_assay_score,
             save_enriched_variants = save_enriched_variants
     }
 
@@ -36,7 +34,6 @@ task do_select_somatic_variants {
         Float min_af
         Int min_depth
         Float max_pop_af
-        Float max_brca1_func_assay_score
         Boolean save_enriched_variants
         Int batch_size = 300000
 
@@ -77,7 +74,6 @@ task do_select_somatic_variants {
             --min-af=~{min_af} \
             --min-depth=~{min_depth} \
             --max-pop-af=~{max_pop_af} \
-            --max-brca1-func-assay-score=~{max_brca1_func_assay_score} \
             --batch-size=~{batch_size}
     >>>
 
