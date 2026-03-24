@@ -18,7 +18,6 @@ def do_select_somatic_variants(
     min_af: float = 0.15,
     min_depth: int = 5,
     max_pop_af: float = 1e-05,
-    max_brca1_func_assay_score: float = -1.328,
     batch_size: int = 1000000,
 ) -> None:
     """
@@ -42,7 +41,6 @@ def do_select_somatic_variants(
     :param min_af: Minimum allele frequency threshold for variant filtering
     :param min_depth: Minimum read depth threshold for variant filtering
     :param max_pop_af: Maximum population allele frequency for variant filtering
-    :param max_brca1_func_assay_score: Maximum BRCA1 functional assay score for variants
     :param batch_size: number of variants to process at a time
     """
 
@@ -60,15 +58,7 @@ def do_select_somatic_variants(
         db.sql(f"IMPORT DATABASE '{parquet_dir_path}'")
 
         # make views and tables
-        make_views_and_tables(
-            db,
-            sample_id,
-            min_af,
-            min_depth,
-            max_pop_af,
-            max_brca1_func_assay_score,
-            batch_size,
-        )
+        make_views_and_tables(db, sample_id, min_af, min_depth, max_pop_af, batch_size)
 
         if variants_enriched_out_file_path is not None:
             # write wide version of all quality variants to parquet
@@ -128,7 +118,6 @@ def make_views_and_tables(
     min_af: float = 0.15,
     min_depth: int = 5,
     max_pop_af: float = 1e-05,
-    max_brca1_func_assay_score: float = -1.328,
     batch_size: int = 1000000,
 ):
     """
@@ -143,7 +132,6 @@ def make_views_and_tables(
     :param min_af: Minimum allele frequency threshold for variant filtering
     :param min_depth: Minimum read depth threshold for variant filtering
     :param max_pop_af: Maximum population allele frequency for variant filtering
-    :param max_brca1_func_assay_score: Maximum BRCA1 functional assay score for variants
     :param batch_size: number of variants to process at a time
     """
 
@@ -157,10 +145,9 @@ def make_views_and_tables(
     make_batch_views(db, limit=0, offset=0)
     make_vals_wide(db)
     make_info_wide(db)
-    make_transcript_likely_lof(db)
     make_hgnc(db)
     make_oncogene_tsg(db)
-    make_rescues(db, max_brca1_func_assay_score)
+    make_rescues(db)
 
     # split the variants into evenly sized batches
     n_variants = db.table("variants").shape[0]
@@ -174,7 +161,7 @@ def make_views_and_tables(
         # recreate views for this batch's variants, vals, and info
         make_batch_views(db, limit=chosen_batch_size, offset=offset)
 
-        # populate fresh vep table, which is a table for performance reasons
+        # populate fresh vep table, which is a table instead of a view for performance
         populate_vep(db)
 
         # append batch to variants_enriched
@@ -404,9 +391,7 @@ def make_supporting_tables(db: duckdb.DuckDBPyConnection) -> None:
             pon BOOLEAN,
             rescued BOOLEAN,
             rescued_cmc_tier BOOLEAN,
-            rescued_hess BOOLEAN,
             rescued_met BOOLEAN,
-            rescued_oc_brca1_func_assay_score BOOLEAN,
             rescued_oncogene_high_impact BOOLEAN,
             rescued_oncokb_hotspot BOOLEAN,
             rescued_oncokb_muteff BOOLEAN,
@@ -418,16 +403,7 @@ def make_supporting_tables(db: duckdb.DuckDBPyConnection) -> None:
             civic_score FLOAT,
             cosmic_tier INTEGER,
             gc_prop FLOAT,
-            hess_driver BOOLEAN,
-            hess_signature VARCHAR,
             mc VARCHAR,
-            oc_brca1_func_assay_score FLOAT,
-            oc_gtex_gtex_gene VARCHAR,
-            oc_gwas_catalog_disease VARCHAR,
-            oc_gwas_catalog_pmid VARCHAR,
-            oc_pharmgkb_id VARCHAR,
-            oc_provean_prediction VARCHAR,
-            oc_revel_score FLOAT,
             oncogene_high_impact BOOLEAN,
             oncokb_hotspot BOOLEAN,
             oncokb_muteff VARCHAR,
@@ -495,7 +471,6 @@ def make_supporting_tables(db: duckdb.DuckDBPyConnection) -> None:
             alt_count UINTEGER,
             am_class VARCHAR,
             am_pathogenicity FLOAT,
-            brca1_func_score FLOAT,
             civic_description VARCHAR,
             civic_id VARCHAR,
             civic_score FLOAT,
@@ -510,30 +485,20 @@ def make_supporting_tables(db: duckdb.DuckDBPyConnection) -> None:
             gnomade_af FLOAT,
             gnomadg_af FLOAT,
             gt VARCHAR,
-            gtex_gene VARCHAR,
-            gwas_disease VARCHAR,
-            gwas_pmid VARCHAR,
-            hess_driver BOOLEAN,
-            hess_signature VARCHAR,
             hgnc_family VARCHAR,
             hgnc_name VARCHAR,
             hugo_symbol VARCHAR,
             intron VARCHAR,
-            molecular_consequence VARCHAR,
             oncogene_high_impact BOOLEAN,
             oncokb_effect VARCHAR,
             oncokb_hotspot BOOLEAN,
             oncokb_oncogenic VARCHAR,
-            pharmgkb_id VARCHAR,
             polyphen VARCHAR,
             protein_change VARCHAR,
-            provean_prediction VARCHAR,
             ps UINTEGER,
             ref_count UINTEGER,
             rescue BOOLEAN,
-            revel_score FLOAT,
             sift VARCHAR,
-            transcript_likely_lof VARCHAR,
             tumor_suppressor_high_impact BOOLEAN,
             uniprot_id VARCHAR,
             variant_info VARCHAR,
@@ -635,10 +600,6 @@ def make_info_wide(db: duckdb.DuckDBPyConnection) -> None:
     """
     Create a wide view of variant information from the info table.
 
-    Transforms the info table from a long format to a wide format, with columns for
-    various annotations like BRCA1 functional assay score, CIViC information,
-    COSMIC tier, dbSNP ID, and other annotations.
-
     :param db: DuckDB database connection
     """
 
@@ -648,41 +609,19 @@ def make_info_wide(db: duckdb.DuckDBPyConnection) -> None:
         CREATE OR REPLACE VIEW info_wide AS (
             SELECT
                 DISTINCT info.vid,
-                t_oc_brca1_func_assay_score.oc_brca1_func_assay_score,
                 t_civic_desc.civic_desc,
                 t_civic_id.civic_id,
                 t_civic_score.civic_score,
                 t_cosmic_tier.cosmic_tier,
-                rs: t_rs.rs[1],
                 t_gc_prop.gc_prop,
-                mc: list_aggregate(t_mc.mc, 'string_agg', ','),
-                t_oc_gtex_gtex_gene.oc_gtex_gtex_gene,
-                t_oc_gwas_catalog_disease.oc_gwas_catalog_disease,
-                t_oc_gwas_catalog_pmid.oc_gwas_catalog_pmid,
-                hess_driver: coalesce(t_hess.hess_driver, FALSE),
-                t_hess.hess_signature,
                 segdup: coalesce(t_segdup.segdup, FALSE),
                 repeat_masker: coalesce(t_repeat_masker.repeat_masker, FALSE),
                 pon: coalesce(t_pon.pon, FALSE),
-                t_oc_pharmgkb_id.oc_pharmgkb_id,
-                t_oc_provean_prediction.oc_provean_prediction,
-                t_oc_revel_score.oc_revel_score,
                 oncokb_hotspot: coalesce(t_oncokb_hotspot.oncokb_hotspot, FALSE),
                 t_oncokb_muteff.oncokb_muteff,
                 t_oncokb_oncogenic.oncokb_oncogenic
             FROM
                 info
-
-            LEFT JOIN (
-                SELECT
-                    vid,
-                    oc_brca1_func_assay_score: v_float
-                FROM
-                    info
-                WHERE
-                    k = 'oc_brca1_func_assay_score'
-            ) t_oc_brca1_func_assay_score ON
-                info.vid = t_oc_brca1_func_assay_score.vid
 
             LEFT JOIN (
                 SELECT
@@ -747,57 +686,6 @@ def make_info_wide(db: duckdb.DuckDBPyConnection) -> None:
             LEFT JOIN (
                 SELECT
                     vid,
-                    mc: v_varchar_arr
-                FROM
-                    info
-                WHERE
-                    k = 'mc'
-            ) t_mc ON info.vid = t_mc.vid
-
-            LEFT JOIN (
-                SELECT
-                    vid,
-                    oc_gtex_gtex_gene: v_varchar
-                FROM
-                    info
-                WHERE
-                    k = 'oc_gtex_gtex_gene'
-            ) t_oc_gtex_gtex_gene ON info.vid = t_oc_gtex_gtex_gene.vid
-
-            LEFT JOIN (
-                SELECT
-                    vid,
-                    oc_gwas_catalog_disease: v_varchar
-                FROM
-                    info
-                WHERE
-                    k = 'oc_gwas_catalog_disease'
-            ) t_oc_gwas_catalog_disease ON info.vid = t_oc_gwas_catalog_disease.vid
-
-            LEFT JOIN (
-                SELECT
-                    vid,
-                    oc_gwas_catalog_pmid: v_varchar
-                FROM
-                    info
-                WHERE
-                    k = 'oc_gwas_catalog_pmid'
-            ) t_oc_gwas_catalog_pmid ON info.vid = t_oc_gwas_catalog_pmid.vid
-
-            LEFT JOIN (
-                SELECT
-                    vid,
-                    hess_signature: v_varchar,
-                    hess_driver: TRUE
-                FROM
-                    info
-                WHERE
-                    k = 'hess'
-            ) t_hess ON info.vid = t_hess.vid
-
-            LEFT JOIN (
-                SELECT
-                    vid,
                     segdup: TRUE
                 FROM
                     info
@@ -828,36 +716,6 @@ def make_info_wide(db: duckdb.DuckDBPyConnection) -> None:
             LEFT JOIN (
                 SELECT
                     vid,
-                    oc_pharmgkb_id: v_varchar
-                FROM
-                    info
-                WHERE
-                    k = 'oc_pharmgkb_id'
-            ) t_oc_pharmgkb_id ON info.vid = t_oc_pharmgkb_id.vid
-
-            LEFT JOIN (
-                SELECT
-                    vid,
-                    oc_provean_prediction: v_varchar
-                FROM
-                    info
-                WHERE
-                    k = 'oc_provean_prediction'
-            ) t_oc_provean_prediction ON info.vid = t_oc_provean_prediction.vid
-
-            LEFT JOIN (
-                SELECT
-                    vid,
-                    oc_revel_score: v_float
-                FROM
-                    info
-                WHERE
-                    k = 'oc_revel_score'
-            ) t_oc_revel_score ON info.vid = t_oc_revel_score.vid
-
-            LEFT JOIN (
-                SELECT
-                    vid,
                     oncokb_muteff: v_varchar
                 FROM
                     info
@@ -884,51 +742,6 @@ def make_info_wide(db: duckdb.DuckDBPyConnection) -> None:
                 WHERE
                     k = 'oncokb_oncogenic'
             ) t_oncokb_oncogenic ON info.vid = t_oncokb_oncogenic.vid
-        )
-    """)
-
-
-def make_transcript_likely_lof(db: duckdb.DuckDBPyConnection) -> None:
-    """
-    Create a view of transcripts likely to have loss-of-function (LoF) variants.
-
-    Processes the oc_revel_all field from the info table to identify transcripts with a
-    REVEL score >= 0.7, which indicates likely loss of function.
-
-    :param db: DuckDB database connection
-    """
-
-    logging.info("Making transcript_likely_lof_v")
-
-    db.sql("""
-        CREATE OR REPLACE VIEW transcript_likely_lof_v AS (
-            WITH exploded AS (
-                SELECT
-                    vid,
-                    revel_cols: unnest(
-                        json_transform_strict(v_varchar, '["json"]')
-                    )
-                FROM
-                    info
-                WHERE
-                    k = 'oc_revel_all'
-            ),
-            split_to_cols AS (
-                SELECT
-                    vid,
-                    transcript_id: json_extract_string(revel_cols, '$[0]'),
-                    score: json_extract(revel_cols, '$[1]')::DOUBLE
-                FROM exploded
-            )
-            SELECT
-                vid,
-                transcript_likely_lof: string_agg(transcript_id, ';')
-            FROM
-                split_to_cols
-            WHERE
-                score >= 0.7
-            GROUP BY
-                vid
         )
     """)
 
@@ -1174,19 +987,14 @@ def make_oncogene_tsg(db: duckdb.DuckDBPyConnection) -> None:
     """)
 
 
-def make_rescues(
-    db: duckdb.DuckDBPyConnection, max_brca1_func_assay_score: float
-) -> None:
+def make_rescues(db: duckdb.DuckDBPyConnection) -> None:
     """
     Create a view of rescued variants based on various criteria.
 
     Identifies variants that should be rescued despite not meeting standard quality
-    criteria, based on factors like oncogenic effect, hotspot status, COSMIC tier,
-    BRCA1 functional assay score, oncogene/TSG status, and specific gene-position
-    combinations (e.g., TERT promoter, MET exon 14 skipping).
+    criteria.
 
     :param db: DuckDB database connection
-    :param max_brca1_func_assay_score: Maximum BRCA1 functional assay score for variants
     """
 
     logging.info("Making rescues")
@@ -1202,9 +1010,6 @@ def make_rescues(
                     rescued_oncokb_oncogenic: oncokb_oncogenic = 'Oncogenic',
                     rescued_oncokb_hotspot: oncokb_hotspot,
                     rescued_cmc_tier: cosmic_tier = 1,
-                    rescued_oc_brca1_func_assay_score: (
-                        oc_brca1_func_assay_score <= {max_brca1_func_assay_score}
-                    ),
                     rescued_oncogene_high_impact: vid IN (
                         SELECT
                             vid
@@ -1221,7 +1026,6 @@ def make_rescues(
                         WHERE
                             tumor_suppressor_high_impact
                     ),
-                    rescued_hess: hess_driver,
                     rescued_tert: vid IN (
                         SELECT
                             variants_batch.vid
@@ -1266,10 +1070,8 @@ def make_rescues(
                 OR rescued_oncokb_oncogenic
                 OR rescued_oncokb_hotspot
                 OR rescued_cmc_tier
-                OR rescued_oc_brca1_func_assay_score
                 OR rescued_oncogene_high_impact
                 OR rescued_tumor_suppressor_high_impact
-                OR rescued_hess
                 OR rescued_tert
                 OR rescued_met
         )
@@ -1319,16 +1121,12 @@ def make_variants_enriched(
                         rescues.rescued_oncokb_hotspot, FALSE
                     ),
                     rescued_cmc_tier: coalesce(rescues.rescued_cmc_tier, FALSE),
-                    rescued_oc_brca1_func_assay_score: coalesce(
-                        rescues.rescued_oc_brca1_func_assay_score, FALSE
-                    ),
                     rescued_oncogene_high_impact: coalesce(
                         rescues.rescued_oncogene_high_impact, FALSE
                     ),
                     rescued_tumor_suppressor_high_impact: coalesce(
                         rescues.rescued_tumor_suppressor_high_impact, FALSE
                     ),
-                    rescued_hess: coalesce(rescues.rescued_hess, FALSE),
                     rescued_tert: coalesce(rescues.rescued_tert, FALSE),
                     rescued_met: coalesce(rescues.rescued_met, FALSE),
                     rescued: coalesce(rescues.rescued, FALSE)
@@ -1415,7 +1213,7 @@ def make_mut_sig(db: duckdb.DuckDBPyConnection) -> None:
                 alt_count,
                 af,
                 dp,
-                rs,
+                rs: vep_existing_variation,
                 segdup: coalesce(segdup, FALSE),
                 repeat_masker: coalesce(repeat_masker, FALSE),
                 pon: coalesce(pon, FALSE),
@@ -1485,25 +1283,15 @@ def make_somatic_variants(db: duckdb.DuckDBPyConnection) -> None:
                 dp,
                 gt,
                 ps,
-                brca1_func_score: oc_brca1_func_assay_score,
                 civic_description: civic_desc,
                 civic_id,
                 civic_score,
                 cosmic_tier,
-                dbsnp_rs_id: rs,
+                dbsnp_rs_id: vep_existing_variation,
                 gc_content: gc_prop,
-                molecular_consequence: mc,
-                gtex_gene: oc_gtex_gtex_gene,
-                gwas_disease: oc_gwas_catalog_disease,
-                gwas_pmid: oc_gwas_catalog_pmid,
-                pharmgkb_id: oc_pharmgkb_id,
-                provean_prediction: oc_provean_prediction,
-                revel_score: oc_revel_score,
                 oncokb_effect: oncokb_muteff,
                 oncokb_hotspot,
                 oncokb_oncogenic,
-                hess_driver,
-                hess_signature,
                 am_class: vep_am_class,
                 am_pathogenicity: vep_am_pathogenicity,
                 dna_change: vep_hgvsc,
@@ -1531,7 +1319,6 @@ def make_somatic_variants(db: duckdb.DuckDBPyConnection) -> None:
                 vep_pli_gene_value,
                 vep_somatic,
                 vep_swissprot,
-                transcript_likely_lof_v.transcript_likely_lof,
                 hgnc_v.hgnc_name,
                 hgnc_family: hgnc_v.hgnc_group,
                 oncogene_high_impact,
@@ -1539,11 +1326,6 @@ def make_somatic_variants(db: duckdb.DuckDBPyConnection) -> None:
                 rescue: rescued
             FROM
                 variants_enriched
-            
-            LEFT JOIN
-                transcript_likely_lof_v
-            ON
-                variants_enriched.vid = transcript_likely_lof_v.vid
             
             LEFT JOIN
                 hgnc_v
@@ -1604,7 +1386,6 @@ def get_somatic_variants_as_df(db: duckdb.DuckDBPyConnection) -> pd.DataFrame:
                 "alt_count": "UInt32",
                 "am_class": "string",
                 "am_pathogenicity": "Float32",
-                "brca1_func_score": "Float32",
                 "civic_description": "string",
                 "civic_id": "string",
                 "civic_score": "Float32",
@@ -1619,30 +1400,20 @@ def get_somatic_variants_as_df(db: duckdb.DuckDBPyConnection) -> pd.DataFrame:
                 "gnomade_af": "Float32",
                 "gnomadg_af": "Float32",
                 "gt": "string",
-                "gtex_gene": "string",
-                "gwas_disease": "string",
-                "gwas_pmid": "string",
-                "hess_driver": "boolean",
-                "hess_signature": "string",
                 "hgnc_family": "string",
                 "hgnc_name": "string",
                 "hugo_symbol": "string",
                 "intron": "string",
-                "molecular_consequence": "string",
                 "oncogene_high_impact": "boolean",
                 "oncokb_effect": "string",
                 "oncokb_hotspot": "boolean",
                 "oncokb_oncogenic": "string",
-                "pharmgkb_id": "string",
                 "polyphen": "string",
                 "protein_change": "string",
-                "provean_prediction": "string",
                 "ps": "UInt32",
                 "ref_count": "UInt32",
                 "rescue": "boolean",
-                "revel_score": "Float32",
                 "sift": "string",
-                "transcript_likely_lof": "string",
                 "tumor_suppressor_high_impact": "boolean",
                 "uniprot_id": "string",
                 "variant_info": "string",

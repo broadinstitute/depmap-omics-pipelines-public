@@ -21,7 +21,6 @@ somatic_variant_dtypes = {
     "alt_count": "UInt32",
     "am_class": "string",
     "am_pathogenicity": "Float32",
-    "brca1_func_score": "Float32",
     "civic_description": "string",
     "civic_id": "string",
     "civic_score": "Float32",
@@ -36,30 +35,20 @@ somatic_variant_dtypes = {
     "gnomade_af": "Float32",
     "gnomadg_af": "Float32",
     "gt": "string",
-    "gtex_gene": "string",
-    "gwas_disease": "string",
-    "gwas_pmid": "string",
-    "hess_driver": "boolean",
-    "hess_signature": "string",
     "hgnc_family": "string",
     "hgnc_name": "string",
     "hugo_symbol": "string",
     "intron": "string",
-    "molecular_consequence": "string",
     "oncogene_high_impact": "boolean",
     "oncokb_effect": "string",
     "oncokb_hotspot": "boolean",
     "oncokb_oncogenic": "string",
-    "pharmgkb_id": "string",
     "polyphen": "string",
     "protein_change": "string",
-    "provean_prediction": "string",
     "ps": "UInt32",
     "ref_count": "UInt32",
     "rescue": "boolean",
-    "revel_score": "Float32",
     "sift": "string",
-    "transcript_likely_lof": "string",
     "tumor_suppressor_high_impact": "boolean",
     "uniprot_id": "string",
     "variant_info": "string",
@@ -204,7 +193,6 @@ class TestFilter:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -219,30 +207,20 @@ class TestFilter:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Loss-of-function",
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -322,7 +300,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -337,30 +314,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Loss-of-function",
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -387,7 +354,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -402,30 +368,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Gain-of-function",
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -494,7 +450,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -509,30 +464,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": "Oncogenic",
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -599,7 +544,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -614,30 +558,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": True,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -706,7 +640,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -721,137 +654,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
-                    "tumor_suppressor_high_impact": False,
-                    "uniprot_id": None,
-                    "variant_info": None,
-                    "variant_type": None,
-                    "vep_biotype": None,
-                    "vep_clin_sig": None,
-                    "vep_ensp": None,
-                    "vep_existing_variation": None,
-                    "vep_hgnc_id": None,
-                    "vep_impact": None,
-                    "vep_loftool": None,
-                    "vep_mane_select": None,
-                    "vep_pli_gene_value": None,
-                    "vep_somatic": None,
-                    "vep_swissprot": None,
-                },
-            ]
-        ).astype(somatic_variant_dtypes)
-
-        assert_frame_equal(observed, expected)
-
-    def test_oc_brca1_func_assay_score(self, db: duckdb.DuckDBPyConnection) -> None:
-        db.sql("""
-            INSERT INTO variants(
-                vid, chrom, pos, ref, alt
-            ) VALUES (
-                1, 'chr1', 100, 'G', 'C'
-            ), (
-                2, 'chr2', 200, 'A', 'T'
-            );
-            
-            INSERT INTO vals_info(
-                vid, kind, k, v_integer, v_float
-            ) VALUES (
-                1, 'val', 'af', NULL, 0.3
-            ), (
-                1, 'val', 'dp', 20, NULL
-            ), (
-                2, 'val', 'af', NULL, 0.3
-            ), (
-                2, 'val', 'dp', 20, NULL
-            );
-            
-            INSERT INTO vals_info(
-                vid, kind, k, v_float
-            ) VALUES (
-                1, 'info', 'oc_brca1_func_assay_score', -1.5
-            ), (
-                2, 'info', 'oc_brca1_func_assay_score', -0.9
-            );
-        """)
-
-        make_views_and_tables(db, sample_id="sid", max_brca1_func_assay_score=-1.328)
-
-        observed = get_somatic_variants_as_df(db)
-
-        expected = pd.DataFrame(
-            [
-                {
-                    "sample_id": "sid",
-                    "chrom": "chr1",
-                    "pos": 100,
-                    "ref": "G",
-                    "alt": "C",
-                    "af": 0.3,
-                    "alt_count": None,
-                    "am_class": None,
-                    "am_pathogenicity": None,
-                    "brca1_func_score": -1.5,
-                    "civic_description": None,
-                    "civic_id": None,
-                    "civic_score": None,
-                    "cosmic_tier": None,
-                    "dbsnp_rs_id": None,
-                    "dna_change": None,
-                    "dp": 20,
-                    "ensembl_feature_id": None,
-                    "ensembl_gene_id": None,
-                    "exon": None,
-                    "gc_content": None,
-                    "gnomade_af": None,
-                    "gnomadg_af": None,
-                    "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
-                    "hgnc_family": None,
-                    "hgnc_name": None,
-                    "hugo_symbol": None,
-                    "intron": None,
-                    "molecular_consequence": None,
-                    "oncogene_high_impact": False,
-                    "oncokb_effect": None,
-                    "oncokb_hotspot": False,
-                    "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
-                    "polyphen": None,
-                    "protein_change": None,
-                    "provean_prediction": None,
-                    "ps": None,
-                    "ref_count": None,
-                    "rescue": True,
-                    "revel_score": None,
-                    "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -902,15 +718,15 @@ class TestRescue:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_boolean, v_json_arr
+                vid, kind, k, v_boolean, v_json
             ) VALUES (
                 1, 'info', 'oncogene', TRUE, NULL 
             ), (
-                1, 'info', 'csq', NULL, ['{"impact": "HIGH"}']
+                1, 'info', 'csq', NULL, '{"impact": "HIGH"}'
             ), (
                 2, 'info', 'oncogene', TRUE, NULL 
             ), (
-                2, 'info', 'csq', NULL, ['{"impact": "LOW"}']
+                2, 'info', 'csq', NULL, '{"impact": "LOW"}'
             ), (
                 3, 'info', 'oncogene', TRUE, NULL 
             );
@@ -932,7 +748,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -947,30 +762,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": True,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -1021,15 +826,15 @@ class TestRescue:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_boolean, v_json_arr
+                vid, kind, k, v_boolean, v_json
             ) VALUES (
                 1, 'info', 'tsg', TRUE, NULL 
             ), (
-                1, 'info', 'csq', NULL, ['{"impact": "HIGH"}']
+                1, 'info', 'csq', NULL, '{"impact": "HIGH"}'
             ), (
                 2, 'info', 'tsg', TRUE, NULL 
             ), (
-                2, 'info', 'csq', NULL, ['{"impact": "LOW"}']
+                2, 'info', 'csq', NULL, '{"impact": "LOW"}'
             ), (
                 3, 'info', 'tsg', TRUE, NULL 
             );
@@ -1051,7 +856,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -1066,30 +870,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": True,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -1100,111 +894,6 @@ class TestRescue:
                     "vep_existing_variation": None,
                     "vep_hgnc_id": None,
                     "vep_impact": "HIGH",
-                    "vep_loftool": None,
-                    "vep_mane_select": None,
-                    "vep_pli_gene_value": None,
-                    "vep_somatic": None,
-                    "vep_swissprot": None,
-                },
-            ]
-        ).astype(somatic_variant_dtypes)
-
-        assert_frame_equal(observed, expected)
-
-    def test_hess_driver(self, db: duckdb.DuckDBPyConnection) -> None:
-        db.sql("""
-            INSERT INTO variants(
-                vid, chrom, pos, ref, alt
-            ) VALUES (
-                1, 'chr1', 100, 'G', 'C'
-            ), (
-                2, 'chr2', 200, 'A', 'T'
-            );
-            
-            INSERT INTO vals_info(
-                vid, kind, k, v_integer, v_float
-            ) VALUES (
-                1, 'val', 'af', NULL, 0.3
-            ), (
-                1, 'val', 'dp', 20, NULL
-            ), (
-                2, 'val', 'af', NULL, 0.3
-            ), (
-                2, 'val', 'dp', 20, NULL
-            );
-            
-            INSERT INTO vals_info(
-                vid, kind, k, v_varchar
-            ) VALUES (
-                1, 'info', 'hess', 'sig'
-            );
-        """)
-
-        make_views_and_tables(db, sample_id="sid")
-
-        observed = get_somatic_variants_as_df(db)
-
-        expected = pd.DataFrame(
-            [
-                {
-                    "sample_id": "sid",
-                    "chrom": "chr1",
-                    "pos": 100,
-                    "ref": "G",
-                    "alt": "C",
-                    "af": 0.3,
-                    "alt_count": None,
-                    "am_class": None,
-                    "am_pathogenicity": None,
-                    "brca1_func_score": None,
-                    "civic_description": None,
-                    "civic_id": None,
-                    "civic_score": None,
-                    "cosmic_tier": None,
-                    "dbsnp_rs_id": None,
-                    "dna_change": None,
-                    "dp": 20,
-                    "ensembl_feature_id": None,
-                    "ensembl_gene_id": None,
-                    "exon": None,
-                    "gc_content": None,
-                    "gnomade_af": None,
-                    "gnomadg_af": None,
-                    "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": True,
-                    "hess_signature": "sig",
-                    "hgnc_family": None,
-                    "hgnc_name": None,
-                    "hugo_symbol": None,
-                    "intron": None,
-                    "molecular_consequence": None,
-                    "oncogene_high_impact": False,
-                    "oncokb_effect": None,
-                    "oncokb_hotspot": False,
-                    "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
-                    "polyphen": None,
-                    "protein_change": None,
-                    "provean_prediction": None,
-                    "ps": None,
-                    "ref_count": None,
-                    "rescue": True,
-                    "revel_score": None,
-                    "sift": None,
-                    "transcript_likely_lof": None,
-                    "tumor_suppressor_high_impact": False,
-                    "uniprot_id": None,
-                    "variant_info": None,
-                    "variant_type": None,
-                    "vep_biotype": None,
-                    "vep_clin_sig": None,
-                    "vep_ensp": None,
-                    "vep_existing_variation": None,
-                    "vep_hgnc_id": None,
-                    "vep_impact": None,
                     "vep_loftool": None,
                     "vep_mane_select": None,
                     "vep_pli_gene_value": None,
@@ -1239,9 +928,9 @@ class TestRescue:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_json_arr
+                vid, kind, k, v_json
             ) VALUES (
-                1, 'info', 'csq', ['{"symbol": "TERT"}']
+                1, 'info', 'csq', '{"symbol": "TERT"}'
             );
         """)
 
@@ -1261,7 +950,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -1276,30 +964,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": "TERT",
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -1344,9 +1022,9 @@ class TestRescue:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_json_arr
+                vid, kind, k, v_json
             ) VALUES (
-                1, 'info', 'csq', ['{"symbol": "MET"}']
+                1, 'info', 'csq', '{"symbol": "MET"}'
             );
         """)
 
@@ -1366,7 +1044,6 @@ class TestRescue:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -1381,30 +1058,20 @@ class TestRescue:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": "MET",
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -1458,13 +1125,13 @@ class TestFilteredVids:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_json_arr
+                vid, kind, k, v_json
             ) VALUES (
-                1, 'info', 'csq', ['{"impact": "HIGH", "consequence": "foo&splice_region"}']
+                1, 'info', 'csq', '{"impact": "HIGH", "consequence": "foo&splice_region"}'
             ), (
-                2, 'info', 'csq', ['{"impact": "HIGH", "consequence": "other"}']
+                2, 'info', 'csq', '{"impact": "HIGH", "consequence": "other"}'
             ), (
-                3, 'info', 'csq', ['{"impact": "LOW", "consequence": "splice"}']
+                3, 'info', 'csq', '{"impact": "LOW", "consequence": "splice"}'
             );
         """)
 
@@ -1484,7 +1151,6 @@ class TestFilteredVids:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -1499,30 +1165,20 @@ class TestFilteredVids:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": False,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": "foo&splice_region",
@@ -1573,13 +1229,13 @@ class TestFilteredVids:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_json_arr
+                vid, kind, k, v_json
             ) VALUES (
-                1, 'info', 'csq', ['{"impact": "HIGH", "hgvsp": "ENSP15.3:p.Glu32del"}']
+                1, 'info', 'csq', '{"impact": "HIGH", "hgvsp": "ENSP15.3:p.Glu32del"}'
             ), (
-                2, 'info', 'csq', ['{"impact": "HIGH", "hgvsp": "ENSP30.3:p.Asp637="}']
+                2, 'info', 'csq', '{"impact": "HIGH", "hgvsp": "ENSP30.3:p.Asp637="}'
             ), (
-                3, 'info', 'csq', ['{"impact": "LOW", "hgvsp": null}']
+                3, 'info', 'csq', '{"impact": "LOW", "hgvsp": null}'
             );
         """)
 
@@ -1599,7 +1255,6 @@ class TestFilteredVids:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -1614,30 +1269,20 @@ class TestFilteredVids:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": "ENSP15.3:p.Glu32del",
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": False,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -1682,11 +1327,11 @@ class TestFilteredVids:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_json_arr
+                vid, kind, k, v_json
             ) VALUES (
-                1, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.000002}']
+                1, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.000002}'
             ), (
-                2, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.000002}']
+                2, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.000002}'
             );
         """)
 
@@ -1706,7 +1351,6 @@ class TestFilteredVids:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -1721,30 +1365,20 @@ class TestFilteredVids:
                     "gnomade_af": 0.000001,
                     "gnomadg_af": 0.000002,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": False,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": "splice",
@@ -1795,13 +1429,13 @@ class TestFilteredVids:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_json_arr
+                vid, kind, k, v_json
             ) VALUES (
-                1, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice"}']
+                1, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice"}'
             ), (
-                2, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice"}']
+                2, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice"}'
             ), (
-                3, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice"}']
+                3, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice"}'
             );
             
             --undo some of the previous positive selections
@@ -1830,7 +1464,6 @@ class TestFilteredVids:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -1845,30 +1478,20 @@ class TestFilteredVids:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": False,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": "splice",
@@ -1925,15 +1548,15 @@ class TestFilteredVids:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_json_arr
+                vid, kind, k, v_json
             ) VALUES (
-                1, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.000002}']
+                1, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.000002}'
             ), (
-                2, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.1}']
+                2, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.1}'
             ), (
-                3, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": null, "gnom_adg_af": 0.1}']
+                3, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": null, "gnom_adg_af": 0.1}'
             ), (
-                4, 'info', 'csq', ['{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.000002}']
+                4, 'info', 'csq', '{"impact": "HIGH", "consequence": "splice", "gnom_ade_af": 0.000001, "gnom_adg_af": 0.000002}'
             );
             
             INSERT INTO vals_info(
@@ -1959,7 +1582,6 @@ class TestFilteredVids:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -1974,30 +1596,20 @@ class TestFilteredVids:
                     "gnomade_af": 0.000001,
                     "gnomadg_af": 0.000002,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": None,
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": False,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": "splice",
@@ -2062,7 +1674,6 @@ class TestColumns:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -2077,30 +1688,20 @@ class TestColumns:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Loss-of-function",
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -2168,7 +1769,6 @@ class TestColumns:
                     "alt_count": 15,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -2183,30 +1783,20 @@ class TestColumns:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": "1|1",
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Loss-of-function",
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": 175160788,
                     "ref_count": 5,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -2279,6 +1869,7 @@ class TestColumns:
                 1, 'info', 'cmc_tier', 1
             );
 
+            -- ignored; we get this from vep_existing_variation now
             INSERT INTO vals_info(
                 vid, kind, k, v_varchar_arr
             ) VALUES (
@@ -2291,6 +1882,7 @@ class TestColumns:
                 1, 'info', 'gc_prop', 0.321
             );
 
+            -- all annotations below are no longer included
             INSERT INTO vals_info(
                 vid, kind, k, v_varchar_arr
             ) VALUES (
@@ -2342,12 +1934,11 @@ class TestColumns:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": -1.5,
                     "civic_description": "civic description",
                     "civic_id": 123,
                     "civic_score": 45.0,
                     "cosmic_tier": 1,
-                    "dbsnp_rs_id": "346575",
+                    "dbsnp_rs_id": None,
                     "dna_change": None,
                     "dp": 20,
                     "ensembl_feature_id": None,
@@ -2357,30 +1948,20 @@ class TestColumns:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": "LINC00339|LINC00339",
-                    "gwas_disease": "Alzehimer's",
-                    "gwas_pmid": "27863252",
-                    "hess_driver": True,
-                    "hess_signature": "sig",
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": "SO:0001627|intron,SO:0001819|synonymous",
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Loss-of-function",
                     "oncokb_hotspot": True,
                     "oncokb_oncogenic": "Oncogenic",
-                    "pharmgkb_id": "PA166153763",
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": "Damaging",
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": 0.012,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -2426,9 +2007,9 @@ class TestColumns:
             );
             
             INSERT INTO vals_info(
-                vid, kind, k, v_boolean, v_json_arr
+                vid, kind, k, v_boolean, v_json
             ) VALUES (
-                1, 'info', 'csq', NULL, ['{
+                1, 'info', 'csq', NULL, '{
                     "am_class": "likely_benign",
                     "am_pathogenicity": 0.1949,
                     "biotype": "lncRNA",
@@ -2456,7 +2037,7 @@ class TestColumns:
                     "symbol": "EVI5",
                     "uniprot_isoform": "O60447-2",
                     "variant_class": "deletion"
-                }']
+                }'
             );
         """)
 
@@ -2476,12 +2057,11 @@ class TestColumns:
                     "alt_count": None,
                     "am_class": "likely_benign",
                     "am_pathogenicity": 0.1949,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
                     "cosmic_tier": None,
-                    "dbsnp_rs_id": None,
+                    "dbsnp_rs_id": "rs10917833",
                     "dna_change": "hgvsc",
                     "dp": 20,
                     "ensembl_feature_id": "ENST00000412705",
@@ -2491,30 +2071,20 @@ class TestColumns:
                     "gnomade_af": 0.123,
                     "gnomadg_af": 0.456,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": None,
                     "hugo_symbol": "EVI5",
                     "intron": "3/4",
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Loss-of-function",
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": "benign(0)",
                     "protein_change": "ENSP00000510597.1:p.Asn326Thr",
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": "deleterious(0)",
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": "O60447-2",
                     "variant_info": "intergenic_variant",
@@ -2530,112 +2100,6 @@ class TestColumns:
                     "vep_pli_gene_value": 9.8,
                     "vep_somatic": "0&1",
                     "vep_swissprot": "O60447.171",
-                },
-            ]
-        ).astype(somatic_variant_dtypes)
-
-        assert_frame_equal(observed, expected)
-
-    def test_transcript_likely_lof(self, db: duckdb.DuckDBPyConnection) -> None:
-        db.sql("""
-            INSERT INTO variants(
-                vid, chrom, pos, ref, alt
-            ) VALUES (
-                1, 'chr1', 100, 'G', 'C'
-            );
-            
-            INSERT INTO vals_info(
-                vid, kind, k, v_varchar, v_integer, v_float, v_integer_arr
-            ) VALUES (
-                1, 'val', 'af', NULL, NULL, 0.3, NULL
-            ), (
-                1, 'val', 'dp', NULL, 20, NULL, NULL
-            );
-            
-            --any rescue state will work for this test
-            INSERT INTO vals_info(
-                vid, kind, k, v_varchar
-            ) VALUES (
-                1, 'info', 'oncokb_muteff', 'Loss-of-function'
-            );
-            
-            INSERT INTO vals_info(
-                vid, kind, k, v_varchar
-            ) VALUES (
-                1, 'info', 'oc_revel_all', '[["E1",0.7,0.2],["E2",0.8,0.4],["E3",0.5,0.9]]'
-            );
-        """)
-
-        make_views_and_tables(db, sample_id="sid")
-
-        observed = get_somatic_variants_as_df(db)
-
-        expected = pd.DataFrame(
-            [
-                {
-                    "sample_id": "sid",
-                    "chrom": "chr1",
-                    "pos": 100,
-                    "ref": "G",
-                    "alt": "C",
-                    "af": 0.3,
-                    "alt_count": None,
-                    "am_class": None,
-                    "am_pathogenicity": None,
-                    "brca1_func_score": None,
-                    "civic_description": None,
-                    "civic_id": None,
-                    "civic_score": None,
-                    "cosmic_tier": None,
-                    "dbsnp_rs_id": None,
-                    "dna_change": None,
-                    "dp": 20,
-                    "ensembl_feature_id": None,
-                    "ensembl_gene_id": None,
-                    "exon": None,
-                    "gc_content": None,
-                    "gnomade_af": None,
-                    "gnomadg_af": None,
-                    "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
-                    "hgnc_family": None,
-                    "hgnc_name": None,
-                    "hugo_symbol": None,
-                    "intron": None,
-                    "molecular_consequence": None,
-                    "oncogene_high_impact": False,
-                    "oncokb_effect": "Loss-of-function",
-                    "oncokb_hotspot": False,
-                    "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
-                    "polyphen": None,
-                    "protein_change": None,
-                    "provean_prediction": None,
-                    "ps": None,
-                    "ref_count": None,
-                    "rescue": True,
-                    "revel_score": None,
-                    "sift": None,
-                    "transcript_likely_lof": "E1;E2",
-                    "tumor_suppressor_high_impact": False,
-                    "uniprot_id": None,
-                    "variant_info": None,
-                    "variant_type": None,
-                    "vep_biotype": None,
-                    "vep_clin_sig": None,
-                    "vep_ensp": None,
-                    "vep_existing_variation": None,
-                    "vep_hgnc_id": None,
-                    "vep_impact": None,
-                    "vep_loftool": None,
-                    "vep_mane_select": None,
-                    "vep_pli_gene_value": None,
-                    "vep_somatic": None,
-                    "vep_swissprot": None,
                 },
             ]
         ).astype(somatic_variant_dtypes)
@@ -2700,7 +2164,6 @@ class TestColumns:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -2715,30 +2178,20 @@ class TestColumns:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": "group1",
                     "hgnc_name": "name1;name2",
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Loss-of-function",
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
@@ -2765,7 +2218,6 @@ class TestColumns:
                     "alt_count": None,
                     "am_class": None,
                     "am_pathogenicity": None,
-                    "brca1_func_score": None,
                     "civic_description": None,
                     "civic_id": None,
                     "civic_score": None,
@@ -2780,30 +2232,20 @@ class TestColumns:
                     "gnomade_af": None,
                     "gnomadg_af": None,
                     "gt": None,
-                    "gtex_gene": None,
-                    "gwas_disease": None,
-                    "gwas_pmid": None,
-                    "hess_driver": False,
-                    "hess_signature": None,
                     "hgnc_family": None,
                     "hgnc_name": "nameA",
                     "hugo_symbol": None,
                     "intron": None,
-                    "molecular_consequence": None,
                     "oncogene_high_impact": False,
                     "oncokb_effect": "Loss-of-function",
                     "oncokb_hotspot": False,
                     "oncokb_oncogenic": None,
-                    "pharmgkb_id": None,
                     "polyphen": None,
                     "protein_change": None,
-                    "provean_prediction": None,
                     "ps": None,
                     "ref_count": None,
                     "rescue": True,
-                    "revel_score": None,
                     "sift": None,
-                    "transcript_likely_lof": None,
                     "tumor_suppressor_high_impact": False,
                     "uniprot_id": None,
                     "variant_info": None,
