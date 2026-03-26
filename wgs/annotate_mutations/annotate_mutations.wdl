@@ -309,7 +309,7 @@ task annot_with_bcftools {
         File? ref_fasta
         File? ref_fasta_index
 
-        String docker_image = "us-central1-docker.pkg.dev/depmap-omics/terra-images/bcftools"
+        String docker_image = "us-central1-docker.pkg.dev/depmap-omics/terra-images/bcftools_gc_prop"
         String docker_image_hash_or_tag = ":production"
         Int mem_gb = 4
         Int cpu = 1
