@@ -1,0 +1,26 @@
+{
+  "deleted": false,
+  "inputs": {
+    "patch_hg38_bam.bai": "this.analysis_ready_bai",
+    "patch_hg38_bam.bam": "this.analysis_ready_bam",
+    "patch_hg38_bam.sample_id": "this.sample_id",
+    "patch_hg38_bam.crai": "this.analysis_ready_crai",
+    "patch_hg38_bam.cram": "this.analysis_ready_cram",
+    "patch_hg38_bam.old_ref_fasta": "this.ref_fasta",
+    "patch_hg38_bam.old_ref_fasta_index": "this.ref_fasta_index",
+    "patch_hg38_bam.output_cram_or_bam": "BAM"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "patch_hg38_bam",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "patch_hg38_bam",
+  "outputs": {
+    "patch_hg38_bam.patched_crai_bai": "this.patched_crai_bai",
+    "patch_hg38_bam.patched_cram_bam": "this.patched_cram_bam"
+  },
+  "rootEntityType": "sample"
+}
