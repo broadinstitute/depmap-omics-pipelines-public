@@ -78,6 +78,9 @@ task do_patch_hg38_bam {
         # outputs
         patched_bam: "BAM containing only the realigned reads from the problematic regions"
         patched_bai: "index of patched_bam"
+
+        cram_bam: { localization_optional: true }
+        crai_bai: { localization_optional: true }
     }
 
     input {
@@ -86,8 +89,8 @@ task do_patch_hg38_bam {
         File cram_bam
         File crai_bai
         File problems_bed
-        File old_ref_fasta
-        File old_ref_fasta_index
+        File? old_ref_fasta
+        File? old_ref_fasta_index
         File ref_fasta
         File ref_fasta_index
 
@@ -101,36 +104,33 @@ task do_patch_hg38_bam {
     }
 
     Int disk_space = (
-        if input_type == "CRAM" then
-            ceil(size(select_first([cram_bam, "/dev/null"]), "GiB") / 10)
-        else # BAM
-            ceil(size(select_first([cram_bam, "/dev/null"]), "GiB") / 100)
-    ) + ceil(size(ref_fasta, "GiB") * 5) + 10 + additional_disk_gb
-
-    Int n_threads = cpu
-
-    parameter_meta {
-        cram_bam: { localization_optional: true }
-        crai_bai: { localization_optional: true }
-    }
+        (
+            if input_type == "CRAM" then
+                ceil(size(select_first([cram_bam, "/dev/null"]), "GiB") / 10)
+            else # BAM
+                ceil(size(select_first([cram_bam, "/dev/null"]), "GiB") / 100)
+        ) + ceil(size(ref_fasta, "GiB"))
+          + ceil(size(select_first([old_ref_fasta, "/dev/null"]), "GiB"))
+          + 10 + additional_disk_gb
+     )
 
     command <<<
         set -euo pipefail
 
         echo "Subsetting input BAM"
         samtools view \
-            -@ ~{n_threads} \
+            -@ ~{cpu} \
             -M \
             -P \
             -h \
-            -T "~{old_ref_fasta}" \
+            ~{'-T "' + old_ref_fasta + '"'} \
             -L "~{problems_bed}" \
             "~{cram_bam}" \
             -o "subset.bam"
 
         echo "Getting read names overlapping problem regions"
         samtools view \
-            -@ ~{n_threads} \
+            -@ ~{cpu} \
             "subset.bam" \
             | cut -f1 \
             | LC_ALL=C sort -u \
@@ -138,14 +138,14 @@ task do_patch_hg38_bam {
 
         echo "Extracting alignments of those reads"
         samtools view \
-            -@ ~{n_threads} \
+            -@ ~{cpu} \
             -N "problem_read_names.txt" \
             -o "problem_reads.bam" \
             "subset.bam"
 
         echo "Converting to FASTQ (preserves qualities)"
         samtools fastq \
-            -@ ~{n_threads} \
+            -@ ~{cpu} \
             -1 "reads_1.fq.gz" \
             -2 "reads_2.fq.gz" \
             -s "singletons.fq.gz" \
@@ -154,15 +154,15 @@ task do_patch_hg38_bam {
             "problem_reads.bam"
 
         echo "Realigning paired-end reads to corrected reference"
-        bwa mem -t ~{n_threads} "~{ref_fasta}" "reads_1.fq.gz" "reads_2.fq.gz" \
-          | samtools view -b -@ ~{n_threads} - \
-          | samtools sort -@ ~{n_threads} -o "realigned.pe.bam"
+        bwa mem -t ~{cpu} "~{ref_fasta}" "reads_1.fq.gz" "reads_2.fq.gz" \
+          | samtools view -b -@ ~{cpu} - \
+          | samtools sort -@ ~{cpu} -o "realigned.pe.bam"
 
         if [ "$(gzip -dc "singletons.fq.gz" | wc -c)" -gt 0 ]; then
             echo "Realigning singleton reads to corrected reference"
-            bwa mem -t ~{n_threads} "~{ref_fasta}" "singletons.fq.gz" \
-              | samtools sort -@ ~{n_threads} -o "realigned.se.bam" -
-            samtools merge -@ ~{n_threads} -f "realigned.bam" "realigned.pe.bam" "realigned.se.bam"
+            bwa mem -t ~{cpu} "~{ref_fasta}" "singletons.fq.gz" \
+              | samtools sort -@ ~{cpu} -o "realigned.se.bam" -
+            samtools merge -@ ~{cpu} -f "realigned.bam" "realigned.pe.bam" "realigned.se.bam"
         else
             mv "realigned.pe.bam" "realigned.bam"
         fi
@@ -177,7 +177,7 @@ task do_patch_hg38_bam {
             RGPU=unit1 \
             RGSM="~{sample_id}"
 
-        samtools index -@ ~{n_threads} "~{sample_id}.patch.bam"
+        samtools index -@ ~{cpu} "~{sample_id}.patch.bam"
         mv "~{sample_id}.patch.bam.bai" "~{sample_id}.patch.bai"
     >>>
 

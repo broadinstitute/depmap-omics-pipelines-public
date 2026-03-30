@@ -20,8 +20,8 @@
   "namespace": "cds-pipelines",
   "name": "patch_hg38_bam",
   "outputs": {
-    "patch_hg38_bam.patched_crai_bai": "this.patched_crai_bai",
-    "patch_hg38_bam.patched_cram_bam": "this.patched_cram_bam"
+    "patch_hg38_bam.patched_bai": "this.patched_bai",
+    "patch_hg38_bam.patched_bam": "this.patched_bam"
   },
   "rootEntityType": "sample"
 }
