@@ -8,6 +8,7 @@ workflow patch_hg38_bam {
     parameter_meta {
         # inputs
         sample_id: "ID of this sample"
+        input_type: "'BAM' or 'CRAM'"
         bam: "input BAM file (provide bam+bai or cram+crai)"
         bai: "index of input BAM file"
         cram: "input CRAM file (provide bam+bai or cram+crai)"
@@ -17,15 +18,15 @@ workflow patch_hg38_bam {
         old_ref_fasta_index: "index of old_ref_fasta"
         ref_fasta: "corrected reference FASTA to realign problem regions against"
         ref_fasta_index: "index of ref_fasta"
-        output_cram_or_bam: "output file format; either 'BAM' or 'CRAM'"
 
         # outputs
-        patched_bam_cram: "subsetted+patched BAM or CRAM"
-        patched_bai_crai: "index of patched_bam_cram"
+        patched_bam: "BAM containing only the realigned reads from the problematic regions"
+        patched_bai: "index of patched_bam"
     }
 
     input {
         String sample_id
+        String input_type
         File? bam
         File? bai
         File? cram
@@ -35,25 +36,24 @@ workflow patch_hg38_bam {
         File? old_ref_fasta_index
         File ref_fasta
         File ref_fasta_index
-        String output_cram_or_bam
     }
 
     call do_patch_hg38_bam {
         input:
             sample_id = sample_id,
+            input_type = input_type,
             cram_bam = select_first([bam, cram]),
             crai_bai = select_first([bai, crai]),
             problems_bed = problems_bed,
             old_ref_fasta = old_ref_fasta,
             old_ref_fasta_index = old_ref_fasta_index,
             ref_fasta = ref_fasta,
-            ref_fasta_index = ref_fasta_index,
-            output_cram_or_bam = output_cram_or_bam
+            ref_fasta_index = ref_fasta_index
     }
 
     output {
-        File patched_bam_cram = do_patch_hg38_bam.patched_bam_cram
-        File patched_bai_crai = do_patch_hg38_bam.patched_bai_crai
+        File patched_bam = do_patch_hg38_bam.patched_bam
+        File patched_bai = do_patch_hg38_bam.patched_bai
     }
 }
 
@@ -66,6 +66,7 @@ task do_patch_hg38_bam {
     parameter_meta {
         # inputs
         sample_id: "ID of this sample"
+        input_type: "'BAM' or 'CRAM'"
         cram_bam: "input BAM or CRAM file"
         crai_bai: "index of cram_bam"
         problems_bed: "BED file of problematic regions whose overlapping reads will be realigned"
@@ -73,15 +74,15 @@ task do_patch_hg38_bam {
         old_ref_fasta_index: "index of old_ref_fasta"
         ref_fasta: "corrected reference FASTA to realign problem regions against"
         ref_fasta_index: "index of ref_fasta"
-        output_cram_or_bam: "output file format; either 'BAM' or 'CRAM'"
 
         # outputs
-        patched_bam_cram: "subsetted+patched BAM or CRAM"
-        patched_bai_crai: "index of patched_bam_cram"
+        patched_bam: "BAM containing only the realigned reads from the problematic regions"
+        patched_bai: "index of patched_bam"
     }
 
     input {
         String sample_id
+        String input_type
         File cram_bam
         File crai_bai
         File problems_bed
@@ -89,7 +90,6 @@ task do_patch_hg38_bam {
         File old_ref_fasta_index
         File ref_fasta
         File ref_fasta_index
-        String output_cram_or_bam
 
         String docker_image = "us-central1-docker.pkg.dev/depmap-omics/terra-images/samtools_picard"
         String docker_image_hash_or_tag = ":production"
@@ -101,11 +101,11 @@ task do_patch_hg38_bam {
     }
 
     Int disk_space = (
-        ceil(
-            10 * size(cram_bam, "GiB")
-            + size(ref_fasta, "GiB")
-        ) + additional_disk_gb
-    )
+        if input_type == "CRAM" then
+            ceil(size(select_first([cram_bam, "/dev/null"]), "GiB") / 10)
+        else # BAM
+            ceil(size(select_first([cram_bam, "/dev/null"]), "GiB") / 100)
+    ) + ceil(size(ref_fasta, "GiB") * 5) + 10 + additional_disk_gb
 
     Int n_threads = cpu
 
@@ -121,6 +121,7 @@ task do_patch_hg38_bam {
         samtools view \
             -@ ~{n_threads} \
             -M \
+            -P \
             -h \
             -T "~{old_ref_fasta}" \
             -L "~{problems_bed}" \
@@ -157,31 +158,18 @@ task do_patch_hg38_bam {
           | samtools view -b -@ ~{n_threads} - \
           | samtools sort -@ ~{n_threads} -o "realigned.pe.bam"
 
-        if [ -s "singletons.fq.gz" ]; then
+        if [ "$(gzip -dc "singletons.fq.gz" | wc -c)" -gt 0 ]; then
             echo "Realigning singleton reads to corrected reference"
             bwa mem -t ~{n_threads} "~{ref_fasta}" "singletons.fq.gz" \
               | samtools sort -@ ~{n_threads} -o "realigned.se.bam" -
             samtools merge -@ ~{n_threads} -f "realigned.bam" "realigned.pe.bam" "realigned.se.bam"
         else
-            cp "realigned.pe.bam" "realigned.bam"
+            mv "realigned.pe.bam" "realigned.bam"
         fi
-
-        echo "Removing problem reads from subsetted BAM/CRAM"
-        samtools view \
-            -@ ~{n_threads} \
-            -T "~{old_ref_fasta}" \
-            -b \
-            -N "^problem_read_names.txt" \
-            -o "subset_without_problem_reads.bam" \
-            "subset.bam"
-
-        echo "Merging realigned reads back and sorting"
-        samtools merge -@ ~{n_threads} -u - "subset_without_problem_reads.bam" "realigned.bam" \
-          | samtools sort -@ ~{n_threads} -o "patched.bam" -
 
         echo "Adding arbitrary read group tags (required by GATK tools)"
         java -jar /usr/local/bin/picard.jar AddOrReplaceReadGroups \
-            I="patched.bam" \
+            I="realigned.bam" \
             O="~{sample_id}.patch.bam" \
             RGID=1 \
             RGLB=lib1 \
@@ -189,29 +177,13 @@ task do_patch_hg38_bam {
             RGPU=unit1 \
             RGSM="~{sample_id}"
 
-        if [ "~{output_cram_or_bam}" = "CRAM" ]; then
-            echo "Converting patch BAM to CRAM"
-            samtools view \
-                -@ ~{n_threads} \
-                -C \
-                -T "~{ref_fasta}" \
-                -o "~{sample_id}.patch.cram" \
-                "~{sample_id}.patch.bam"
-            samtools index -@ ~{n_threads} "~{sample_id}.patch.cram"
-            mv "~{sample_id}.patch.cram.crai" "~{sample_id}.patch.crai"
-        else
-            samtools index -@ ~{n_threads} "~{sample_id}.patch.bam"
-            mv "~{sample_id}.patch.bam.bai" "~{sample_id}.patch.bai"
-        fi
+        samtools index -@ ~{n_threads} "~{sample_id}.patch.bam"
+        mv "~{sample_id}.patch.bam.bai" "~{sample_id}.patch.bai"
     >>>
 
     output {
-        File patched_bam_cram = if output_cram_or_bam == "CRAM"
-            then "~{sample_id}.patch.cram"
-            else "~{sample_id}.patch.bam"
-        File patched_bai_crai = if output_cram_or_bam == "CRAM"
-            then "~{sample_id}.patch.crai"
-            else "~{sample_id}.patch.bai"
+        File patched_bam = "~{sample_id}.patch.bam"
+        File patched_bai = "~{sample_id}.patch.bai"
     }
 
     runtime {

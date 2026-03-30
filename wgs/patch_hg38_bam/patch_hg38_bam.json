@@ -3,11 +3,12 @@
   "inputs": {
     "patch_hg38_bam.bai": "this.analysis_ready_bai",
     "patch_hg38_bam.bam": "this.analysis_ready_bam",
-    "patch_hg38_bam.sample_id": "this.sample_id",
     "patch_hg38_bam.crai": "this.analysis_ready_crai",
     "patch_hg38_bam.cram": "this.analysis_ready_cram",
+    "patch_hg38_bam.input_type": "this.delivery_file_format",
     "patch_hg38_bam.old_ref_fasta": "this.ref_fasta",
     "patch_hg38_bam.old_ref_fasta_index": "this.ref_fasta_index",
+    "patch_hg38_bam.sample_id": "this.sample_id",
     "patch_hg38_bam.output_cram_or_bam": "BAM"
   },
   "methodConfigVersion": 1,
