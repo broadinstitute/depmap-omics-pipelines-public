@@ -20,7 +20,7 @@ workflow patch_hg38_bam {
         output_cram_or_bam: "output file format; either 'BAM' or 'CRAM'"
 
         # outputs
-        patched_bam_cram: "patched BAM or CRAM; either the full file with realigned reads merged in, or just the realigned reads from the problematic regions"
+        patched_bam_cram: "subsetted+patched BAM or CRAM"
         patched_bai_crai: "index of patched_bam_cram"
     }
 
@@ -76,7 +76,7 @@ task do_patch_hg38_bam {
         output_cram_or_bam: "output file format; either 'BAM' or 'CRAM'"
 
         # outputs
-        patched_bam_cram: "patched BAM or CRAM; either the full file with realigned reads merged in, or just the realigned reads from the problematic regions"
+        patched_bam_cram: "subsetted+patched BAM or CRAM"
         patched_bai_crai: "index of patched_bam_cram"
     }
 
@@ -117,7 +117,7 @@ task do_patch_hg38_bam {
     command <<<
         set -euo pipefail
 
-        # Get problematic subset of full input BAM
+        echo "Subsetting input BAM"
         samtools view \
             -@ ~{n_threads} \
             -M \
@@ -127,7 +127,7 @@ task do_patch_hg38_bam {
             "~{cram_bam}" \
             -o "subset.bam"
 
-        # Get read names overlapping problem regions
+        echo "Getting read names overlapping problem regions"
         samtools view \
             -@ ~{n_threads} \
             "subset.bam" \
@@ -135,14 +135,14 @@ task do_patch_hg38_bam {
             | LC_ALL=C sort -u \
             > "problem_read_names.txt"
 
-        # Extract full alignments of those reads
+        echo "Extracting alignments of those reads"
         samtools view \
             -@ ~{n_threads} \
             -N "problem_read_names.txt" \
             -o "problem_reads.bam" \
             "subset.bam"
 
-        # Convert to FASTQ (preserves qualities)
+        echo "Converting to FASTQ (preserves qualities)"
         samtools fastq \
             -@ ~{n_threads} \
             -1 "reads_1.fq.gz" \
@@ -152,12 +152,13 @@ task do_patch_hg38_bam {
             -n \
             "problem_reads.bam"
 
-        # Realign paired-end reads to corrected reference
+        echo "Realigning paired-end reads to corrected reference"
         bwa mem -t ~{n_threads} "~{ref_fasta}" "reads_1.fq.gz" "reads_2.fq.gz" \
           | samtools view -b -@ ~{n_threads} - \
           | samtools sort -@ ~{n_threads} -o "realigned.pe.bam"
 
         if [ -s "singletons.fq.gz" ]; then
+            echo "Realigning singleton reads to corrected reference"
             bwa mem -t ~{n_threads} "~{ref_fasta}" "singletons.fq.gz" \
               | samtools sort -@ ~{n_threads} -o "realigned.se.bam" -
             samtools merge -@ ~{n_threads} -f "realigned.bam" "realigned.pe.bam" "realigned.se.bam"
@@ -165,7 +166,7 @@ task do_patch_hg38_bam {
             cp "realigned.pe.bam" "realigned.bam"
         fi
 
-        # Remove problem reads from subsetted BAM/CRAM
+        echo "Removing problem reads from subsetted BAM/CRAM"
         samtools view \
             -@ ~{n_threads} \
             -T "~{old_ref_fasta}" \
@@ -174,11 +175,11 @@ task do_patch_hg38_bam {
             -o "subset_without_problem_reads.bam" \
             "subset.bam"
 
-        # Merge realigned reads back and sort
+        echo "Merging realigned reads back and sorting"
         samtools merge -@ ~{n_threads} -u - "subset_without_problem_reads.bam" "realigned.bam" \
           | samtools sort -@ ~{n_threads} -o "patched.bam" -
 
-        # Add read group tags (required by GATK tools)
+        echo "Adding arbitrary read group tags (required by GATK tools)"
         java -jar /usr/local/bin/picard.jar AddOrReplaceReadGroups \
             I="patched.bam" \
             O="~{sample_id}.patch.bam" \
@@ -189,6 +190,7 @@ task do_patch_hg38_bam {
             RGSM="~{sample_id}"
 
         if [ "~{output_cram_or_bam}" = "CRAM" ]; then
+            echo "Converting patch BAM to CRAM"
             samtools view \
                 -@ ~{n_threads} \
                 -C \
