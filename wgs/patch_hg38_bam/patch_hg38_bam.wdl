@@ -165,17 +165,17 @@ task do_patch_hg38_bam {
             cp "realigned.pe.bam" "realigned.bam"
         fi
 
-        # Remove problem reads from original BAM/CRAM
+        # Remove problem reads from subsetted BAM/CRAM
         samtools view \
             -@ ~{n_threads} \
             -T "~{old_ref_fasta}" \
             -b \
             -N "^problem_read_names.txt" \
-            -o "original_without_problem_reads.bam" \
+            -o "subset_without_problem_reads.bam" \
             "subset.bam"
 
         # Merge realigned reads back and sort
-        samtools merge -@ ~{n_threads} -u - "original_without_problem_reads.bam" "realigned.bam" \
+        samtools merge -@ ~{n_threads} -u - "subset_without_problem_reads.bam" "realigned.bam" \
           | samtools sort -@ ~{n_threads} -o "patched.bam" -
 
         # Add read group tags (required by GATK tools)
