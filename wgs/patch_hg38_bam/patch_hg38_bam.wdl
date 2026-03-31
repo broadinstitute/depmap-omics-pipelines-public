@@ -18,6 +18,11 @@ workflow patch_hg38_bam {
         old_ref_fasta_index: "index of old_ref_fasta"
         ref_fasta: "corrected reference FASTA to realign problem regions against"
         ref_fasta_index: "index of ref_fasta"
+        ref_fasta_amb: "BWA supporting file for ref_fasta"
+        ref_fasta_ann: "BWA supporting file for ref_fasta"
+        ref_fasta_bwt: "BWA supporting file for ref_fasta"
+        ref_fasta_pac: "BWA supporting file for ref_fasta"
+        ref_fasta_sa: "BWA supporting file for ref_fasta"
 
         # outputs
         patched_bam: "BAM containing only the realigned reads from the problematic regions"
@@ -36,6 +41,11 @@ workflow patch_hg38_bam {
         File? old_ref_fasta_index
         File ref_fasta
         File ref_fasta_index
+        File ref_fasta_amb
+        File ref_fasta_ann
+        File ref_fasta_bwt
+        File ref_fasta_pac
+        File ref_fasta_sa
     }
 
     call do_patch_hg38_bam {
@@ -48,7 +58,12 @@ workflow patch_hg38_bam {
             old_ref_fasta = old_ref_fasta,
             old_ref_fasta_index = old_ref_fasta_index,
             ref_fasta = ref_fasta,
-            ref_fasta_index = ref_fasta_index
+            ref_fasta_index = ref_fasta_index,
+            ref_fasta_amb = ref_fasta_amb,
+            ref_fasta_ann = ref_fasta_ann,
+            ref_fasta_bwt = ref_fasta_bwt,
+            ref_fasta_pac = ref_fasta_pac,
+            ref_fasta_sa = ref_fasta_sa
     }
 
     output {
@@ -74,6 +89,11 @@ task do_patch_hg38_bam {
         old_ref_fasta_index: "index of old_ref_fasta"
         ref_fasta: "corrected reference FASTA to realign problem regions against"
         ref_fasta_index: "index of ref_fasta"
+        ref_fasta_amb: "BWA supporting file for ref_fasta"
+        ref_fasta_ann: "BWA supporting file for ref_fasta"
+        ref_fasta_bwt: "BWA supporting file for ref_fasta"
+        ref_fasta_pac: "BWA supporting file for ref_fasta"
+        ref_fasta_sa: "BWA supporting file for ref_fasta"
 
         # outputs
         patched_bam: "BAM containing only the realigned reads from the problematic regions"
@@ -81,6 +101,8 @@ task do_patch_hg38_bam {
 
         cram_bam: { localization_optional: true }
         crai_bai: { localization_optional: true }
+        old_ref_fasta: { localization_optional: true }
+        old_ref_fasta_index: { localization_optional: true }
     }
 
     input {
@@ -93,39 +115,40 @@ task do_patch_hg38_bam {
         File? old_ref_fasta_index
         File ref_fasta
         File ref_fasta_index
+        File ref_fasta_amb
+        File ref_fasta_ann
+        File ref_fasta_bwt
+        File ref_fasta_pac
+        File ref_fasta_sa
 
         String docker_image = "us-central1-docker.pkg.dev/depmap-omics/terra-images/samtools_picard"
         String docker_image_hash_or_tag = ":production"
-        Int mem_gb = 4
-        Int cpu = 16
+        Int mem_gb = 2
+        Int cpu = 8
         Int preemptible = 1
         Int max_retries = 0
         Int additional_disk_gb = 0
     }
 
-    Int disk_space = (
-        (
-            if input_type == "CRAM" then
-                ceil(size(select_first([cram_bam, "/dev/null"]), "GiB") / 10)
-            else # BAM
-                ceil(size(select_first([cram_bam, "/dev/null"]), "GiB") / 100)
-        ) + ceil(size(ref_fasta, "GiB"))
-          + ceil(size(select_first([old_ref_fasta, "/dev/null"]), "GiB"))
-          + 10 + additional_disk_gb
-     )
+    Int disk_space = 20 + additional_disk_gb
 
     command <<<
         set -euo pipefail
+
+        # set up auth for samtools streaming from GCS buckets
+        export GCS_OAUTH_TOKEN="$(gcloud auth application-default print-access-token)"
+        export GCS_REQUESTER_PAYS_PROJECT="$(gcloud config get-value project -q)"
 
         echo "Subsetting input BAM"
         samtools view \
             -@ ~{cpu} \
             -M \
-            -P \
             -h \
+            --customized-index \
             ~{'-T "' + old_ref_fasta + '"'} \
             -L "~{problems_bed}" \
             "~{cram_bam}" \
+            "~{crai_bai}" \
             -o "subset.bam"
 
         echo "Getting read names overlapping problem regions"
@@ -161,7 +184,8 @@ task do_patch_hg38_bam {
         if [ "$(gzip -dc "singletons.fq.gz" | wc -c)" -gt 0 ]; then
             echo "Realigning singleton reads to corrected reference"
             bwa mem -t ~{cpu} "~{ref_fasta}" "singletons.fq.gz" \
-              | samtools sort -@ ~{cpu} -o "realigned.se.bam" -
+              | samtools view -b -@ ~{cpu} - \
+              | samtools sort -@ ~{cpu} -o "realigned.se.bam"
             samtools merge -@ ~{cpu} -f "realigned.bam" "realigned.pe.bam" "realigned.se.bam"
         else
             mv "realigned.pe.bam" "realigned.bam"

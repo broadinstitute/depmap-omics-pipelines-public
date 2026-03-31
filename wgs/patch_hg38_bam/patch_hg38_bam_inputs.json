@@ -1,5 +1,10 @@
 {
   "patch_hg38_bam.problems_bed": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/giab_fix_intervals_100k_padded.bed",
   "patch_hg38_bam.ref_fasta": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2.fasta",
-  "patch_hg38_bam.ref_fasta_index": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2.fasta.fai"
+  "patch_hg38_bam.ref_fasta_amb": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2.fasta.amb",
+  "patch_hg38_bam.ref_fasta_ann": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2.fasta.ann",
+  "patch_hg38_bam.ref_fasta_bwt": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2.fasta.bwt",
+  "patch_hg38_bam.ref_fasta_index": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2.fasta.fai",
+  "patch_hg38_bam.ref_fasta_pac": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2.fasta.pac",
+  "patch_hg38_bam.ref_fasta_sa": "gs://ccleparams/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2/GRCh38_masked_v2_decoy_excludes_GPRIN2_DUSP22_FANCD2.fasta.sa"
 }
