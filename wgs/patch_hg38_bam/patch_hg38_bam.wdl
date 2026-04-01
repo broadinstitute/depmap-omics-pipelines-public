@@ -124,13 +124,13 @@ task do_patch_hg38_bam {
         String docker_image = "us-central1-docker.pkg.dev/depmap-omics/terra-images/samtools_picard"
         String docker_image_hash_or_tag = ":production"
         Int mem_gb = 8
-        Int cpu = 2
+        Int cpu = 4
         Int preemptible = 1
         Int max_retries = 0
         Int additional_disk_gb = 0
     }
 
-    Int disk_space = 20 + additional_disk_gb
+    Int disk_space = 100 + additional_disk_gb
 
     command <<<
         set -euo pipefail
