@@ -327,23 +327,23 @@ task M2 {
     Int machine_mem = if defined(mem) then mem * 1000 else 3500
     Int command_mem = machine_mem - 500
 
-    parameter_meta{
-        intervals: {localization_optional: true}
-        ref_fasta: {localization_optional: true}
-        ref_fai: {localization_optional: true}
-        ref_dict: {localization_optional: true}
-        tumor_reads: {localization_optional: true}
-        tumor_reads_index: {localization_optional: true}
-        normal_reads: {localization_optional: true}
-        normal_reads_index: {localization_optional: true}
-        pon: {localization_optional: true}
-        pon_idx: {localization_optional: true}
-        gnomad: {localization_optional: true}
-        gnomad_idx: {localization_optional: true}
-        gga_vcf: {localization_optional: true}
-        gga_vcf_idx: {localization_optional: true}
-        variants_for_contamination: {localization_optional: true}
-        variants_for_contamination_idx: {localization_optional: true}
+    parameter_meta {
+        intervals: { localization_optional: true }
+        ref_fasta: { localization_optional: true }
+        ref_fai: { localization_optional: true }
+        ref_dict: { localization_optional: true }
+        tumor_reads: { localization_optional: true }
+        tumor_reads_index: { localization_optional: true }
+        normal_reads: { localization_optional: true }
+        normal_reads_index: { localization_optional: true }
+        pon: { localization_optional: true }
+        pon_idx: { localization_optional: true }
+        gnomad: { localization_optional: true }
+        gnomad_idx: { localization_optional: true }
+        gga_vcf: { localization_optional: true }
+        gga_vcf_idx: { localization_optional: true }
+        variants_for_contamination: { localization_optional: true }
+        variants_for_contamination_idx: { localization_optional: true }
     }
 
     command <<<
@@ -657,10 +657,10 @@ task Filter {
     String output_vcf = if compress_vcfs then "~{sample_id}.filtered.vcf.gz" else "~{sample_id}.filtered.vcf"
     String output_vcf_idx = output_vcf + if compress_vcfs then ".tbi" else ".idx"
 
-    parameter_meta{
-      ref_fasta: {localization_optional: true}
-      ref_fai: {localization_optional: true}
-      ref_dict: {localization_optional: true}
+    parameter_meta {
+      ref_fasta: { localization_optional: true }
+      ref_fai: { localization_optional: true }
+      ref_dict: { localization_optional: true }
     }
 
     command <<<
@@ -718,14 +718,14 @@ task FilterAlignmentArtifacts {
     Int machine_mem = mem
     Int command_mem = machine_mem - 500
 
-    parameter_meta{
-      ref_fasta: {localization_optional: true}
-      ref_fai: {localization_optional: true}
-      ref_dict: {localization_optional: true}
-      input_vcf: {localization_optional: true}
-      input_vcf_idx: {localization_optional: true}
-      reads: {localization_optional: true}
-      reads_index: {localization_optional: true}
+    parameter_meta {
+      ref_fasta: { localization_optional: true }
+      ref_fai: { localization_optional: true }
+      ref_dict: { localization_optional: true }
+      input_vcf: { localization_optional: true }
+      input_vcf_idx: { localization_optional: true }
+      reads: { localization_optional: true }
+      reads_index: { localization_optional: true }
     }
 
     command <<<
