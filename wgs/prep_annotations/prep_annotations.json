@@ -5,7 +5,8 @@
     "prep_annotations.ref_dict": "this.ref_dict",
     "prep_annotations.ref_fasta": "this.ref_fasta",
     "prep_annotations.ref_fasta_index": "this.ref_fasta_index",
-    "prep_annotations.sample_id": "this.sample_id"
+    "prep_annotations.sample_id": "this.sample_id",
+    "prep_annotations.vcf_patch": "this.mut_vcf_patch"
   },
   "methodConfigVersion": 1,
   "methodRepoMethod": {
