@@ -1,0 +1,21 @@
+{
+  "deleted": false,
+  "inputs": {
+    "call_mutations.sample_id": "this.sample_id",
+    "call_mutations.tumor_reads": "this.patched_bam",
+    "call_mutations.tumor_reads_index": "this.patched_bai"
+  },
+  "methodConfigVersion": 1,
+  "methodRepoMethod": {
+    "methodNamespace": "cds-pipelines",
+    "methodName": "call_mutations_patched",
+    "methodVersion": 1
+  },
+  "namespace": "cds-pipelines",
+  "name": "call_mutations_patched",
+  "outputs": {
+    "call_mutations.filtered_vcf": "this.mut_vcf_patch",
+    "call_mutations.filtered_vcf_idx": "this.mut_vcf_patch_idx"
+  },
+  "rootEntityType": "sample"
+}
