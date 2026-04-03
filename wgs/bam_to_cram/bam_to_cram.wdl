@@ -1,6 +1,23 @@
 version 1.0
 
 workflow bam_to_cram {
+    meta {
+        description: "Convert a BAM file to CRAM format and index it"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        bam: "input BAM file to convert"
+        bai: "index of bam"
+        ref_fasta: "reference FASTA"
+        ref_fasta_index: "index of ref_fasta"
+
+        # outputs
+        cram: "CRAM file converted from bam"
+        crai: "index of cram"
+    }
+
     input {
         String sample_id
         File bam
@@ -25,6 +42,24 @@ workflow bam_to_cram {
 }
 
 task convert_bam_to_cram {
+    meta {
+        description: "Convert a BAM file to CRAM format and index it using samtools"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        bam: "input BAM file to convert"
+        bai: "index of bam"
+        ref_fasta: "reference FASTA"
+        ref_fasta_index: "index of ref_fasta"
+
+        # outputs
+        cram: "CRAM file converted from bam"
+        crai: "index of cram"
+    }
+
     input {
         String sample_id
         File bam
@@ -76,9 +111,5 @@ task convert_bam_to_cram {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }
