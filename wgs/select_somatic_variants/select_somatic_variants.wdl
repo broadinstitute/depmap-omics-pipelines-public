@@ -1,6 +1,25 @@
 version 1.0
 
 workflow select_somatic_variants {
+    meta {
+        description: "Select somatic variants from an annotated DuckDB Parquet dataset"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        duckdb: "Parquet files produced by vcf-to-duckdb"
+        min_af: "minimum allele frequency for a variant to be retained"
+        min_depth: "minimum read depth for a variant to be retained"
+        max_pop_af: "maximum population allele frequency"
+        save_enriched_variants: "if true, also save the intermediate enriched variants data as Parquet"
+
+        # outputs
+        mut_somatic_variants: "Parquet file of selected somatic variants"
+        mut_enriched_variants: "Parquet file of unfiltered variants (with all output and debugging columns)"
+        mut_sig_variants: "Parquet file of unfiltered variants (for mutational signature analysis)"
+    }
+
     input {
         String sample_id
         Array[File] duckdb
@@ -23,11 +42,32 @@ workflow select_somatic_variants {
     output {
         File mut_somatic_variants = do_select_somatic_variants.somatic_variants
         File? mut_enriched_variants = do_select_somatic_variants.enriched_variants
-        File mut_sig_variants = do_select_somatic_variants.mut_sig_variants
+        File mut_sig_variants = do_select_somatic_variants.sig_variants
     }
 }
 
 task do_select_somatic_variants {
+    meta {
+        description: "Select somatic variants from an annotated DuckDB Parquet dataset"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        duckdb: "Parquet files produced by vcf-to-duckdb"
+        min_af: "minimum allele frequency for a variant to be retained"
+        min_depth: "minimum read depth for a variant to be retained"
+        max_pop_af: "maximum population allele frequency"
+        save_enriched_variants: "if true, also save the intermediate enriched variants data as Parquet"
+        batch_size: "number of variants to process per batch (default: 300000)"
+
+        # outputs
+        somatic_variants: "Parquet file of selected somatic variants"
+        enriched_variants: "Parquet file of unfiltered variants (with all output and debugging columns)"
+        sig_variants: "Parquet file of unfiltered variants (for mutational signature analysis)"
+    }
+
     input {
         String sample_id
         Array[File] duckdb
@@ -80,7 +120,7 @@ task do_select_somatic_variants {
     output {
         File somatic_variants = "~{sample_id}.somatic_variants.parquet"
         File? enriched_variants = "~{sample_id}.enriched_variants.parquet"
-        File mut_sig_variants = "~{sample_id}.mut_sig_variants.parquet"
+        File sig_variants = "~{sample_id}.mut_sig_variants.parquet"
     }
 
     runtime {
@@ -90,9 +130,5 @@ task do_select_somatic_variants {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }
