@@ -123,7 +123,7 @@ task do_patch_hg38_bam {
 
         String docker_image = "us-central1-docker.pkg.dev/depmap-omics/terra-images/samtools_picard"
         String docker_image_hash_or_tag = ":production"
-        Int mem_gb = 8
+        Int mem_gb = 16
         Int cpu = 4
         Int preemptible = 1
         Int max_retries = 0
@@ -177,15 +177,17 @@ task do_patch_hg38_bam {
             "problem_reads.bam"
 
         echo "Realigning paired-end reads to corrected reference"
-        bwa mem -t ~{cpu} "~{ref_fasta}" "reads_1.fq.gz" "reads_2.fq.gz" \
-          | samtools view -b -@ ~{cpu} - \
-          | samtools sort -@ ~{cpu} -o "realigned.pe.bam"
+        bwa mem -t ~{cpu} "~{ref_fasta}" "reads_1.fq.gz" "reads_2.fq.gz" -o "pe.sam"
+        samtools view -b -@ ~{cpu} "pe.sam" -o "pe.bam"
+        samtools sort -@ ~{cpu} "pe.bam" -o "realigned.pe.bam"
+        rm "pe.sam" "pe.bam"
 
         if [ "$(gzip -dc "singletons.fq.gz" | wc -c)" -gt 0 ]; then
             echo "Realigning singleton reads to corrected reference"
-            bwa mem -t ~{cpu} "~{ref_fasta}" "singletons.fq.gz" \
-              | samtools view -b -@ ~{cpu} - \
-              | samtools sort -@ ~{cpu} -o "realigned.se.bam"
+            bwa mem -t ~{cpu} "~{ref_fasta}" "singletons.fq.gz" -o "se.sam"
+            samtools view -b -@ ~{cpu} "se.sam" -o "se.bam"
+            samtools sort -@ ~{cpu} "se.bam" -o "realigned.se.bam"
+            rm "se.sam" "se.bam"
             samtools merge -@ ~{cpu} -f "realigned.bam" "realigned.pe.bam" "realigned.se.bam"
         else
             mv "realigned.pe.bam" "realigned.bam"
