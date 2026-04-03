@@ -10,7 +10,7 @@ workflow cram_to_bam {
         sample_id: "ID of this sample"
         cram: "input CRAM file to convert"
         crai: "index of cram"
-        ref_fasta: "reference FASTA used to decode the CRAM"
+        ref_fasta: "reference FASTA"
         ref_fasta_index: "index of ref_fasta"
 
         # outputs
@@ -24,7 +24,6 @@ workflow cram_to_bam {
         File crai
         File ref_fasta
         File ref_fasta_index
-    }
 
     call convert_cram_to_bam {
         input:
@@ -52,7 +51,7 @@ task convert_cram_to_bam {
         sample_id: "ID of this sample"
         cram: "input CRAM file to convert"
         crai: "index of cram"
-        ref_fasta: "reference FASTA used to decode the CRAM"
+        ref_fasta: "reference FASTA"
         ref_fasta_index: "index of ref_fasta"
 
         # outputs
