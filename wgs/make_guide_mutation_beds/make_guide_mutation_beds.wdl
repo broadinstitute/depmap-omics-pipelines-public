@@ -1,6 +1,30 @@
 version 1.0
 
 workflow make_guide_mutation_beds {
+    meta {
+        description: "Intersect somatic variants from a VCF with CRISPR guide library BED files to produce per-library mutation BED files"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        vcf: "bgzip-compressed VCF of somatic variants"
+        vcf_idx: "optional index of vcf; will be created if not provided"
+        bed_avana: "BED file of Avana guide library target regions"
+        bed_brunello: "BED file of Brunello guide library target regions"
+        bed_humagne: "BED file of Humagne guide library target regions"
+        bed_ky: "BED file of KY guide library target regions"
+        bed_tko: "BED file of TKO guide library target regions"
+        min_af: "minimum allele frequency for a variant to be included"
+
+        # outputs
+        guide_bed_avana: "Avana guide BED annotated with per-guide mutation counts"
+        guide_bed_brunello: "Brunello guide BED annotated with per-guide mutation counts"
+        guide_bed_humagne: "Humagne guide BED annotated with per-guide mutation counts"
+        guide_bed_ky: "KY guide BED annotated with per-guide mutation counts"
+        guide_bed_tko: "TKO guide BED annotated with per-guide mutation counts"
+    }
+
     input {
         String sample_id
         File vcf
@@ -51,6 +75,31 @@ workflow make_guide_mutation_beds {
 }
 
 task filter_vcfs_by_bed {
+    meta {
+        description: "Filter a somatic variant VCF by CRISPR guide library regions and allele frequency, producing a mutation BED per library"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        vcf: "bgzip-compressed VCF of somatic variants"
+        vcf_idx: "optional index of vcf; will be created if not provided or if vcf required bgzip conversion"
+        bed_avana: "BED file of Avana guide library target regions"
+        bed_brunello: "BED file of Brunello guide library target regions"
+        bed_humagne: "BED file of Humagne guide library target regions"
+        bed_ky: "BED file of KY guide library target regions"
+        bed_tko: "BED file of TKO guide library target regions"
+        min_af: "minimum allele frequency for a variant to be included"
+
+        # outputs
+        mut_bed_avana: "BED of PASS variants overlapping Avana guide regions with allele frequency"
+        mut_bed_brunello: "BED of PASS variants overlapping Brunello guide regions with allele frequency"
+        mut_bed_humagne: "BED of PASS variants overlapping Humagne guide regions with allele frequency"
+        mut_bed_ky: "BED of PASS variants overlapping KY guide regions with allele frequency"
+        mut_bed_tko: "BED of PASS variants overlapping TKO guide regions with allele frequency"
+    }
+
     input {
         String sample_id
         File vcf
@@ -134,13 +183,36 @@ task filter_vcfs_by_bed {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task intersect_beds {
+    meta {
+        description: "Intersect per-library mutation BEDs with guide library BEDs to count mutations per guide"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        mut_bed_avana: "BED of mutations overlapping Avana guide regions"
+        mut_bed_brunello: "BED of mutations overlapping Brunello guide regions"
+        mut_bed_humagne: "BED of mutations overlapping Humagne guide regions"
+        mut_bed_ky: "BED of mutations overlapping KY guide regions"
+        mut_bed_tko: "BED of mutations overlapping TKO guide regions"
+        bed_avana: "BED file of Avana guide library target regions"
+        bed_brunello: "BED file of Brunello guide library target regions"
+        bed_humagne: "BED file of Humagne guide library target regions"
+        bed_ky: "BED file of KY guide library target regions"
+        bed_tko: "BED file of TKO guide library target regions"
+
+        # outputs
+        guide_bed_avana: "Avana guide BED annotated with per-guide mutation counts"
+        guide_bed_brunello: "Brunello guide BED annotated with per-guide mutation counts"
+        guide_bed_humagne: "Humagne guide BED annotated with per-guide mutation counts"
+        guide_bed_ky: "KY guide BED annotated with per-guide mutation counts"
+        guide_bed_tko: "TKO guide BED annotated with per-guide mutation counts"
+    }
+
     input {
         String sample_id
         File mut_bed_avana
@@ -211,9 +283,5 @@ task intersect_beds {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }
