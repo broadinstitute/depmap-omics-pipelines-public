@@ -1,6 +1,67 @@
 version 1.0
 
 workflow annotate_mutations {
+    meta {
+        description: "Annotate a somatic variant VCF with multiple annotation sources"
+    }
+
+    parameter_meta {
+        # inputs
+        ref_fasta: "reference FASTA"
+        ref_fasta_index: "index of ref_fasta"
+        ref_dict: "sequence dictionary for ref_fasta"
+        sample_id: "ID of this sample"
+        input_vcf: "input VCF to annotate"
+        xy_intervals: "file listing chromosomes used to scatter VEP annotation by chromosome"
+        annot_seg_dups: "if true, annotate variants in segmental duplication regions"
+        segdup_bed: "BED file of segmental duplication regions; required when annot_seg_dups is true"
+        segdup_bed_index: "index of segdup_bed"
+        annot_repeat_masker: "if true, annotate variants in RepeatMasker regions"
+        repeatmasker_bed: "BED file of RepeatMasker regions; required when annot_repeat_masker is true"
+        repeatmasker_bed_index: "index of repeatmasker_bed"
+        annot_hess_drivers: "if true, annotate Hess driver signatures"
+        hess_drivers: "TSV of Hess driver signatures; required when annot_hess_drivers is true"
+        hess_drivers_index: "index of hess_drivers"
+        annot_oncokb: "if true, annotate OncoKB oncogenicity, mutation effect, and hotspot status"
+        oncokb_annotation: "OncoKB annotation CSV; required when annot_oncokb is true"
+        annot_civic: "if true, annotate CIViC variant IDs, evidence scores, and descriptions"
+        civic_annotation: "CIViC annotation VCF; required when annot_civic is true"
+        civic_annotation_index: "index of civic_annotation"
+        annot_cosmic_cmc: "if true, annotate COSMIC Cancer Mutation Census significance tiers"
+        cosmic_cmc: "COSMIC CMC VCF; required when annot_cosmic_cmc is true"
+        cosmic_cmc_index: "index of cosmic_cmc"
+        annot_oncogenes_tsg: "if true, annotate oncogene and tumor suppressor gene status"
+        oncogenes_tsg: "BED file of oncogenes and TSGs; required when annot_oncogenes_tsg is true"
+        oncogenes_tsg_index: "index of oncogenes_tsg"
+        annot_hgnc: "if true, annotate HGNC approved names and gene group names"
+        hgnc: "BED file of HGNC gene annotations; required when annot_hgnc is true"
+        hgnc_index: "index of hgnc"
+        annot_gc_prop: "if true, annotate GC proportion in a centered window around each variant"
+        gc_window: "window size in bp for GC proportion calculation; required when annot_gc_prop is true"
+        annot_snpeff: "if true, annotate functional effects with snpEff"
+        annot_snpsift: "if true, annotate ClinVar clinical significance with SnpSift"
+        snpeff_db: "snpEff database zip archive; required when annot_snpeff is true"
+        clinvar_vcf: "ClinVar VCF; required when annot_snpsift is true"
+        clinvar_vcf_index: "index of clinvar_vcf"
+        annot_open_cravat: "if true, annotate with Open-CRAVAT variant effect predictors"
+        open_cravat_data_sources_url: "GCS URL of Open-CRAVAT data sources to rsync; required when annot_open_cravat is true"
+        annot_ensembl_vep: "if true, annotate with Ensembl VEP"
+        vep_pick_order: "comma-separated list of criteria used by VEP --pick to select a single consequence per variant"
+        ref_fasta_bgz: "bgzip-compressed reference FASTA for VEP; required when annot_ensembl_vep is true"
+        gene_constraint_scores: "gnomAD gene constraint scores used to extract pLI values for the pLI VEP plugin"
+        loftool_scores: "LoFtool scores file for the LoFtool VEP plugin"
+        alpha_missense: "AlphaMissense scores file for the AlphaMissense VEP plugin"
+        alpha_missense_index: "index of alpha_missense"
+        vep_chrom_cache_url_prefix: "URL prefix for per-chromosome VEP cache archives (prefix + chrom + suffix)"
+        vep_chrom_cache_url_suffix: "URL suffix for per-chromosome VEP cache archives (prefix + chrom + suffix)"
+
+        # outputs
+        mut_annot_bcftools_vcf: "bgzip-compressed VCF with bcftools-based annotations added"
+        mut_annot_snpeff_snpsift_vcf: "bgzip-compressed VCF with snpEff and SnpSift annotations added"
+        mut_annot_open_cravat_vcf: "bgzip-compressed VCF with Open-CRAVAT annotations added"
+        mut_annot_vep_vcf: "bgzip-compressed VCF with Ensembl VEP annotations added"
+    }
+
     input {
         File ref_fasta
         File ref_fasta_index
@@ -47,14 +108,14 @@ workflow annotate_mutations {
         Int? gc_window
 
         # snpEff and SnpSift annotation
-        Boolean annot_snpeff = true
-        Boolean annot_snpsift = true
+        Boolean annot_snpeff = false
+        Boolean annot_snpsift = false
         File? snpeff_db
         File? clinvar_vcf
         File? clinvar_vcf_index
 
         # open-cravat annotation
-        Boolean annot_open_cravat = true
+        Boolean annot_open_cravat = false
         String? open_cravat_data_sources_url
 
         # Ensembl VEP annotation
@@ -169,6 +230,20 @@ workflow annotate_mutations {
 }
 
 task split_vcf_by_chrom {
+    meta {
+        description: "Split a VCF by chromosome for parallel processing"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcf: "input VCF to split"
+        xy_intervals: "file listing chromosomes to split on, one per line"
+
+        # outputs
+        vcfs: "array of per-chromosome VCF files"
+    }
+
     input {
         File vcf
         File xy_intervals
@@ -219,12 +294,25 @@ task split_vcf_by_chrom {
         cpu: cpu
     }
 
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task gather_vcfs {
+    meta {
+        description: "Gather and sort scattered per-chromosome VCFs into a single VCF"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcfs: "array of VCFs to gather"
+        output_file_base_name: "base name for the output file (without extension)"
+
+        # outputs
+        output_vcf: "bgzip-compressed, sorted, gathered VCF"
+
+        vcfs: { localization_optional: true }
+    }
+
     input {
         Array[File] vcfs
         String output_file_base_name
@@ -240,10 +328,6 @@ task gather_vcfs {
 
     Int command_mem_mb = 1000 * mem_gb - 2000
     Int disk_space = ceil(3 * size(vcfs, "GiB")) + 10 + additional_disk_gb
-
-    parameter_meta {
-        vcfs: { localization_optional: true }
-    }
 
     command <<<
         set -euo pipefail
@@ -271,13 +355,50 @@ task gather_vcfs {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task annot_with_bcftools {
+    meta {
+        description: "Annotate a VCF with multiple genomic databases using bcftools"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcf: "input VCF to annotate"
+        output_file_base_name: "base name for the output file (without extension)"
+        annot_seg_dups: "if true, add SEGDUP flag for variants in segmental duplication regions"
+        segdup_bed: "BED file of segmental duplication regions; required when annot_seg_dups is true"
+        segdup_bed_index: "index of segdup_bed"
+        annot_repeat_masker: "if true, add RM flag for variants in RepeatMasker regions"
+        repeatmasker_bed: "BED file of RepeatMasker regions; required when annot_repeat_masker is true"
+        repeatmasker_bed_index: "index of repeatmasker_bed"
+        annot_hess_drivers: "if true, add HESS field with Hess driver signature"
+        hess_drivers: "TSV of Hess driver signatures; required when annot_hess_drivers is true"
+        hess_drivers_index: "index of hess_drivers"
+        annot_oncokb: "if true, add OncoKB protein change, oncogenicity, mutation effect, and hotspot annotations"
+        oncokb_annotation: "OncoKB annotation CSV; required when annot_oncokb is true"
+        annot_civic: "if true, add CIViC variant ID, evidence score, and description annotations"
+        civic_annotation: "CIViC annotation VCF; required when annot_civic is true"
+        civic_annotation_index: "index of civic_annotation"
+        annot_cosmic_cmc: "if true, add CMC_TIER field with COSMIC Cancer Mutation Census significance tier"
+        cosmic_cmc: "COSMIC CMC VCF; required when annot_cosmic_cmc is true"
+        cosmic_cmc_index: "index of cosmic_cmc"
+        annot_oncogenes_tsg: "if true, add ONCOGENE and TSG flags for oncogenes and tumor suppressor genes"
+        oncogenes_tsg: "BED file of oncogenes and TSGs; required when annot_oncogenes_tsg is true"
+        oncogenes_tsg_index: "index of oncogenes_tsg"
+        annot_hgnc: "if true, add HGNC_NAME and HGNC_GROUP fields from the HGNC database"
+        hgnc: "BED file of HGNC gene annotations; required when annot_hgnc is true"
+        hgnc_index: "index of hgnc"
+        annot_gc_prop: "if true, add GC_PROP field with GC proportion in a centered window around each variant"
+        gc_window: "window size in bp for GC proportion calculation; required when annot_gc_prop is true"
+        ref_fasta: "reference FASTA; required when annot_gc_prop is true"
+        ref_fasta_index: "index of ref_fasta"
+
+        # outputs
+        vcf_annot: "bgzip-compressed VCF with bcftools-based annotations added"
+    }
+
     input {
         File vcf
         String output_file_base_name
@@ -540,13 +661,28 @@ task annot_with_bcftools {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task snpeff_snpsift {
+    meta {
+        description: "Annotate a VCF with snpEff functional effects and SnpSift ClinVar clinical significance"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcf: "input VCF to annotate"
+        annot_snpeff: "if true, annotate functional effects with snpEff"
+        annot_snpsift: "if true, annotate ClinVar clinical significance with SnpSift"
+        output_file_base_name: "base name for the output file (without extension)"
+        snpeff_db: "snpEff database zip archive; required when annot_snpeff is true"
+        clinvar_vcf: "ClinVar VCF; required when annot_snpsift is true"
+        clinvar_vcf_index: "index of clinvar_vcf"
+
+        # outputs
+        vcf_annot: "bgzip-compressed VCF with snpEff and SnpSift annotations added"
+    }
+
     input {
         File vcf
         Boolean annot_snpeff
@@ -626,13 +762,27 @@ task snpeff_snpsift {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task open_cravat {
+    meta {
+        description: "Annotate a VCF with Open-CRAVAT using multiple variant effect predictors"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcf: "input VCF to annotate"
+        output_file_base_name: "base name for the output file (without extension)"
+        open_cravat_data_sources_url: "GCS URL of Open-CRAVAT annotator data to rsync before running"
+        annotators_to_use: "list of Open-CRAVAT annotator modules to run"
+        genome: "genome assembly of the input VCF for liftover"
+        modules_options: "Open-CRAVAT module options string passed via --module-option"
+
+        # outputs
+        vcf_annot: "bgzip-compressed VCF with Open-CRAVAT annotations added"
+    }
+
     input {
         File vcf
         String output_file_base_name
@@ -715,13 +865,30 @@ task open_cravat {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task ensembl_vep {
+    meta {
+        description: "Annotate a single-chromosome VCF with Ensembl VEP using AlphaMissense, LoFtool, and pLI plugins"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcf: "input VCF to annotate (typically a single chromosome)"
+        output_file_base_name: "base name for the output file (without extension)"
+        vep_cache: "per-chromosome VEP cache tar archive"
+        ref_fasta_bgz: "bgzip-compressed reference FASTA"
+        vep_pick_order: "comma-separated list of criteria used by VEP --pick to select a single consequence per variant"
+        gene_constraint_scores: "gnomAD gene constraint scores TSV used to extract pLI values for the pLI VEP plugin"
+        loftool_scores: "LoFtool scores file for the LoFtool VEP plugin"
+        alpha_missense: "AlphaMissense scores file for the AlphaMissense VEP plugin"
+        alpha_missense_index: "index of alpha_missense"
+
+        # outputs
+        vcf_annot: "bgzip-compressed VCF with Ensembl VEP annotations added"
+    }
+
     input {
         File vcf
         String output_file_base_name
@@ -801,9 +968,5 @@ task ensembl_vep {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }
