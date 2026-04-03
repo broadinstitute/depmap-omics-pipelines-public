@@ -123,7 +123,7 @@ task do_patch_hg38_bam {
 
         String docker_image = "us-central1-docker.pkg.dev/depmap-omics/terra-images/samtools_picard"
         String docker_image_hash_or_tag = ":production"
-        Int mem_gb = 16
+        Int mem_gb = 8
         Int cpu = 4
         Int preemptible = 1
         Int max_retries = 0

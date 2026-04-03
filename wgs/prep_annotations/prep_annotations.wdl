@@ -173,27 +173,31 @@ task patch_vcf {
     command <<<
         set -euo pipefail
 
-        echo "indexing input VCFs"
-        bcftools index -t "~{vcf}"
-        bcftools index -t "~{vcf_patch}"
+        echo "Reheadering vcf_patch to match sample name in vcf"
+        bcftools query -l "~{vcf}" > sample_name.txt
+        bcftools reheader --samples sample_name.txt "~{vcf_patch}" \
+            --output vcf_patch_reheadered.vcf.gz \
+            && rm "~{vcf_patch}"
 
-        echo "removing variants in patch regions from the base VCF"
+        echo "Indexing input VCFs"
+        bcftools index -t "~{vcf}"
+        bcftools index -t vcf_patch_reheadered.vcf.gz
+
+        echo "Removing variants in patch regions from the base VCF"
         bcftools view "~{vcf}" \
-            --regions-file "^~{patch_region_bed}" \
-            --output-type z \
-            --output base_filtered.vcf.gz
+            --targets-file "^~{patch_region_bed}" \
+            --output base_filtered.vcf.gz \
+            && rm "~{vcf}"
 
         bcftools index -t base_filtered.vcf.gz
 
-        echo "concatenating base (with patch regions removed) and patch VCFs"
+        echo "Concatenating base (with patch regions removed) and patch VCFs"
         bcftools concat \
             --allow-overlaps \
             base_filtered.vcf.gz \
-            "~{vcf_patch}" \
+            vcf_patch_reheadered.vcf.gz \
             --output-type z \
-            | bcftools sort \
-                --output-type z \
-                --output "~{output_file_base_name}.vcf.gz"
+            | bcftools sort --output "~{output_file_base_name}.vcf.gz"
     >>>
 
     output {
