@@ -1,6 +1,30 @@
 version 1.0
 
 workflow call_cnvs {
+    meta {
+        description: "Call copy number variants from a BAM by computing bin coverage and segmenting with an HMM"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        bam: "input BAM file"
+        min_mapq: "minimum mapping quality for reads included in coverage calculation"
+        wgs_bins_bed: "BED file of fixed-width genomic bins used for coverage counting"
+        chrom_sizes: "tab-delimited file of chromosome names and lengths"
+        gc_wig: "WIG file of GC content per bin for bias correction"
+        map_wig: "WIG file of mappability per bin for bias correction"
+        protein_coding_genes_bed: "BED file of protein-coding gene regions used for per-gene copy number summarization"
+        ref_fasta: "reference FASTA"
+
+        # outputs
+        bin_coverage: "gzip-compressed TSV of raw read counts per genomic bin"
+        segments: "TSV of HMM copy number segments"
+        read_cov_bin: "gzip-compressed TSV of GC- and mappability-corrected read coverage per bin"
+        input_params: "TSV of HMM segmentation input parameters"
+        cn_by_gene_weighted_mean: "TSV of weighted-mean copy number per protein-coding gene"
+    }
+
     input {
         String sample_id
         File bam
@@ -44,6 +68,24 @@ workflow call_cnvs {
 }
 
 task calc_bin_coverage {
+    meta {
+        description: "Compute read coverage across fixed-width genomic bins from a BAM"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        bam: "input BAM or CRAM file"
+        min_mapq: "minimum mapping quality for reads to be included"
+        wgs_bins_bed: "BED file of fixed-width genomic bins to count reads over"
+        chrom_sizes: "tab-delimited file of chromosome names and lengths"
+        ref_fasta: "reference FASTA"
+
+        # outputs
+        coverage: "gzip-compressed TSV of raw read counts per genomic bin"
+    }
+
     input {
         String sample_id
         File bam
@@ -106,13 +148,31 @@ task calc_bin_coverage {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task call_segments {
+    meta {
+        description: "Segment GC- and mappability-corrected bin coverage with an HMM and summarize copy number per gene"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        coverage: "gzip-compressed TSV of raw read counts per genomic bin from calc_bin_coverage"
+        chrom_sizes: "tab-delimited file of chromosome names and lengths"
+        gc_wig: "WIG file of GC content per bin for bias correction"
+        map_wig: "WIG file of mappability per bin for bias correction"
+        protein_coding_genes_bed: "BED file of protein-coding gene regions used for per-gene copy number summarization"
+        ref_fasta: "reference FASTA"
+
+        # outputs
+        segments: "TSV of HMM copy number segments"
+        read_cov_bin: "gzip-compressed TSV of GC- and mappability-corrected read coverage per bin"
+        input_params: "TSV of HMM segmentation input parameters"
+        cn_by_gene_weighted_mean: "TSV of weighted-mean copy number per protein-coding gene"
+    }
+
     input {
         String sample_id
         File coverage
@@ -220,9 +280,5 @@ task call_segments {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }
