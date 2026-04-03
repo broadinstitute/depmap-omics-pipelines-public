@@ -1,6 +1,23 @@
 version 1.0
 
 workflow infer_msi_status {
+    meta {
+        description: "Infer microsatellite instability (MSI) status from a BAM using MSIsensor2"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        bam: "BAM file to score for MSI"
+        bai: "index of bam"
+
+        # outputs
+        msisensor2_score: "MSIsensor2 percentage of unstable microsatellite sites"
+        msisensor2_output: "MSIsensor2 summary output file"
+        msisensor2_output_dist: "MSIsensor2 per-locus repeat length distributions"
+        msisensor2_output_somatic: "MSIsensor2 list of somatic microsatellite sites"
+    }
+
     input {
         String sample_id
         File bam
@@ -23,6 +40,24 @@ workflow infer_msi_status {
 }
 
 task run_msisensor2 {
+    meta {
+        description: "Run MSIsensor2 on a BAM to score microsatellite instability"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        bam: "BAM file to score for MSI"
+        bai: "index of bam"
+
+        # outputs
+        msisensor2_score: "MSIsensor2 percentage of unstable microsatellite sites"
+        msisensor2_output: "MSIsensor2 summary output file"
+        msisensor2_output_dist: "MSIsensor2 per-locus repeat length distributions"
+        msisensor2_output_somatic: "MSIsensor2 list of somatic microsatellite sites"
+    }
+
     input {
         String sample_id
         File bam
@@ -104,9 +139,5 @@ task run_msisensor2 {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }
