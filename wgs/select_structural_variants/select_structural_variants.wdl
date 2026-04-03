@@ -1,6 +1,24 @@
 version 1.0
 
 workflow select_structural_variants {
+    meta {
+        description: "Select somatic structural variants from an annotated BEDPE"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bedpe: "annotated BEDPE of structural variants"
+        gene_annotation: "gene overlap annotation file from reannotate_genes for all SV breakpoints"
+        del_annotation: "gene overlap annotation file from reannotate_genes for deletion spans"
+        dup_annotation: "gene overlap annotation file from reannotate_genes for duplication spans"
+        cosmic_fusion_gene_pairs: "file of known COSMIC fusion gene pairs used to flag fusion SVs"
+        onco_tsg: "file of oncogene and tumor suppressor gene annotations"
+
+        # outputs
+        sv_selected_somatic: "Parquet file of selected somatic structural variants"
+    }
+
     input {
         String sample_id
         File input_bedpe
@@ -28,6 +46,28 @@ workflow select_structural_variants {
 }
 
 task do_select_structural_variants {
+    meta {
+        description: "Select somatic structural variants from an annotated BEDPE"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bedpe: "annotated BEDPE of structural variants"
+        gene_annotation: "gene overlap annotation file from reannotate_genes for all SV breakpoints"
+        del_annotation: "gene overlap annotation file from reannotate_genes for deletion spans"
+        dup_annotation: "gene overlap annotation file from reannotate_genes for duplication spans"
+        cosmic_fusion_gene_pairs: "file of known COSMIC fusion gene pairs used to flag fusion SVs"
+        onco_tsg: "file of oncogene and tumor suppressor gene annotations"
+        min_depth: "minimum read depth supporting an SV to be retained"
+        sv_gnomad_cutoff: "maximum gnomAD allele frequency; SVs above this threshold are excluded as germline"
+        large_sv_size: "size in bp above which an SV is classified as large"
+
+        # outputs
+        selected_somatic: "Parquet file of selected somatic structural variants"
+    }
+
     input {
         String sample_id
         File input_bedpe
@@ -81,9 +121,5 @@ task do_select_structural_variants {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }

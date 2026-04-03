@@ -1,6 +1,34 @@
 version 1.0
 
 workflow call_structural_variants {
+    meta {
+        description: "Call structural variants from a tumor BAM (with optional matched normal) using Manta"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        tumor_bam: "tumor BAM file"
+        tumor_bai: "index of tumor_bam"
+        normal_bam: "optional matched normal BAM; if provided enables tumor-normal somatic calling mode"
+        normal_bai: "index of normal_bam"
+        ref_fasta: "reference FASTA"
+        ref_fasta_index: "index of ref_fasta"
+        is_major_contigs_only: "if true, restrict SV calling to regions in major_contig_bed"
+        major_contig_bed: "bgzip-compressed BED file of major contigs to restrict calling to"
+        major_contig_bed_index: "index of major_contig_bed"
+
+        # outputs
+        sv_diploid_vcf: "bgzip-compressed VCF of diploid SVs from the normal sample; only present in tumor-normal mode"
+        sv_diploid_vcf_index: "index of sv_diploid_vcf"
+        sv_somatic_vcf: "bgzip-compressed VCF of somatic SVs (or tumor SVs in tumor-only mode)"
+        sv_somatic_vcf_index: "index of sv_somatic_vcf"
+        sv_candidate_vcf: "bgzip-compressed VCF of unfiltered SV candidates"
+        sv_candidate_vcf_index: "index of sv_candidate_vcf"
+        sv_candidate_indel_vcf: "bgzip-compressed VCF of small indel candidates for use by SNV callers"
+        sv_candidate_indel_vcf_index: "index of sv_candidate_indel_vcf"
+    }
+
     input {
         String sample_id
         File tumor_bam
@@ -40,6 +68,36 @@ workflow call_structural_variants {
 }
 
 task run_manta {
+    meta {
+        description: "Call structural variants from a tumor BAM (with optional matched normal) using Manta"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        tumor_bam: "tumor BAM file"
+        tumor_bai: "index of tumor_bam"
+        normal_bam: "optional matched normal BAM; triggers tumor-normal somatic calling mode when provided"
+        normal_bai: "index of normal_bam"
+        ref_fasta: "reference FASTA"
+        ref_fasta_index: "index of ref_fasta"
+        is_major_contigs_only: "if true, restrict SV calling to regions in major_contig_bed"
+        major_contig_bed: "bgzip-compressed BED file of major contigs to restrict calling to"
+        major_contig_bed_index: "index of major_contig_bed"
+        mem_per_job_gb: "memory in GiB allocated per Manta job"
+
+        # outputs
+        diploid_vcf: "bgzip-compressed VCF of diploid SVs from the normal sample; only present in tumor-normal mode"
+        diploid_vcf_index: "index of diploid_vcf"
+        somatic_vcf: "bgzip-compressed VCF of somatic SVs (or tumor SVs in tumor-only mode)"
+        somatic_vcf_index: "index of somatic_vcf"
+        candidate_vcf: "bgzip-compressed VCF of unfiltered SV candidates"
+        candidate_vcf_index: "index of candidate_vcf"
+        candidate_indel_vcf: "bgzip-compressed VCF of small indel candidates for use by SNV callers"
+        candidate_indel_vcf_index: "index of candidate_indel_vcf"
+    }
+
     input {
         String sample_id
         File tumor_bam
@@ -150,9 +208,5 @@ task run_manta {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }

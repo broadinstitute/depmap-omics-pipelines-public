@@ -1,6 +1,31 @@
 version 1.0
 
 workflow annotate_structural_variants {
+    meta {
+        description: "Annotate a structural variant VCF with Ensembl VEP and reannotate breakpoint genes using a GTF"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        vcf: "input SV VCF to annotate"
+        include_string: "bcftools include expression used to filter variants before annotation"
+        xy_intervals: "file listing chromosomes used to scatter VEP annotation by chromosome"
+        ref_fasta_bgz: "bgzip-compressed reference FASTA for VEP"
+        gnomad: "gnomAD SV VCF used by the VEP StructuralVariantOverlap plugin"
+        gnomad_idx: "index of gnomad"
+        vep_chrom_cache_url_prefix: "URL prefix for per-chromosome VEP cache archives (prefix + chrom + suffix)"
+        vep_chrom_cache_url_suffix: "URL suffix for per-chromosome VEP cache archives (prefix + chrom + suffix)"
+        gtf_bed: "BED file of gene features derived from a GTF, used to reannotate genes at SV breakpoints"
+
+        # outputs
+        sv_annot_vcf: "bgzip-compressed VCF with Ensembl VEP annotations added"
+        sv_annot_bedpe: "BEDPE of annotated SVs converted from sv_annot_vcf"
+        sv_annot_reannotated_bedpe: "BEDPE with genes reannotated by direct GTF intersection at each breakpoint"
+        sv_del_annotation: "BED of genes overlapping the full span of deletion SVs"
+        sv_dup_annotation: "BED of genes overlapping the full span of duplication SVs"
+    }
+
     input {
         String sample_id
         File vcf
@@ -79,6 +104,21 @@ workflow annotate_structural_variants {
 }
 
 task filter_variants {
+    meta {
+        description: "Filter a VCF using a bcftools include expression"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        vcf: "input VCF to filter"
+        include_string: "bcftools include expression; only variants matching this expression are retained"
+
+        # outputs
+        vcf_filtered: "bgzip-compressed VCF containing only variants passing the include expression"
+    }
+
     input {
         String sample_id
         File vcf
@@ -118,13 +158,23 @@ task filter_variants {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task split_vcf_by_chrom {
+    meta {
+        description: "Split a VCF by chromosome for parallel processing"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcf: "input VCF to split"
+        xy_intervals: "file listing chromosomes to split on, one per line"
+
+        # outputs
+        vcfs: "array of per-chromosome VCF files"
+    }
+
     input {
         File vcf
         File xy_intervals
@@ -174,13 +224,28 @@ task split_vcf_by_chrom {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task ensembl_vep {
+    meta {
+        description: "Annotate a single-chromosome SV VCF with Ensembl VEP using the StructuralVariantOverlap gnomAD plugin"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcf: "input VCF to annotate (typically a single chromosome)"
+        output_file_base_name: "base name for the output file (without extension)"
+        vep_cache: "per-chromosome VEP cache tar archive"
+        ref_fasta_bgz: "bgzip-compressed reference FASTA"
+        gnomad: "gnomAD SV VCF used by the StructuralVariantOverlap plugin to annotate population frequency"
+        gnomad_idx: "index of gnomad"
+        max_sv_size: "maximum SV size in bp that VEP will annotate"
+
+        # outputs
+        vcf_annot: "bgzip-compressed VCF with Ensembl VEP annotations added"
+    }
+
     input {
         File vcf
         String output_file_base_name
@@ -262,13 +327,23 @@ task ensembl_vep {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task gather_vcfs {
+    meta {
+        description: "Gather and sort scattered per-chromosome VCFs into a single VCF"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        vcfs: { description: "array of VCFs to gather", localization_optional: true }
+        output_file_base_name: "base name for the output file (without extension)"
+
+        # outputs
+        output_vcf: "bgzip-compressed, sorted, gathered VCF"
+    }
+
     input {
         Array[File] vcfs
         String output_file_base_name
@@ -284,10 +359,6 @@ task gather_vcfs {
 
     Int command_mem_mb = 1000 * mem_gb - 500
     Int disk_space = ceil(3 * size(vcfs, "GiB")) + 10 + additional_disk_gb
-
-    parameter_meta {
-        vcfs: { localization_optional: true }
-    }
 
     command <<<
         set -euo pipefail
@@ -315,13 +386,23 @@ task gather_vcfs {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task convert_to_bedpe {
+    meta {
+        description: "Convert an annotated SV VCF to BEDPE format using ngs-bits VcfToBedpe"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        vcf: "bgzip-compressed SV VCF to convert"
+
+        # outputs
+        output_bedpe: "BEDPE file of structural variants converted from vcf"
+    }
+
     input {
         String sample_id
         File vcf
@@ -356,14 +437,26 @@ task convert_to_bedpe {
         File output_bedpe = "~{sample_id}.bedpe"
     }
 
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task reannotate_genes {
-    # since VEP doesn't correctly annotate genes at breakpoints, we have to intersect
-    # them ourselves
+    meta {
+        description: "Reannotate genes at SV breakpoints and across DEL/DUP spans by direct GTF intersection"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bedpe: "BEDPE of structural variants to reannotate"
+        gtf_bed: "BED file of gene features derived from a GTF"
+
+        # outputs
+        output_reannotated_bedpe: "tab-delimited file of SVs with genes reannotated at each breakpoint"
+        annotated_overlap_del: "BED of genes overlapping the full span of deletion SVs"
+        annotated_overlap_dup: "BED of genes overlapping the full span of duplication SVs"
+    }
+
     input {
         String sample_id
         File input_bedpe
@@ -382,6 +475,9 @@ task reannotate_genes {
 
     command <<<
         set -euo pipefail
+
+        # since VEP doesn't correctly annotate genes at breakpoints, we have to
+        # intersect them ourselves
 
         echo "annotating genes at breakpoint A"
         sed '/^#/d' "~{input_bedpe}" | \
@@ -478,9 +574,5 @@ task reannotate_genes {
         File output_reannotated_bedpe = "~{sample_id}.gene_overlaps.txt"
         File annotated_overlap_del = "~{sample_id}.del_overlap.bed"
         File annotated_overlap_dup = "~{sample_id}.dup_overlap.bed"
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }

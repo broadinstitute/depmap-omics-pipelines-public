@@ -14,9 +14,9 @@ workflow prep_annotations {
         input_vcf: "input VCF to prepare; will be bgzip-compressed if not already"
         vcf_patch: "optional VCF of curated variants to substitute into patch_region_bed regions"
         patch_region_bed: "optional BED file of regions whose variants will be replaced by vcf_patch"
-        fix_ploidy: "if true, correct multi-allelic genotypes where all reads support the alt (default: true)"
-        filter_vcf: "if true, apply bcftools exclude filter using exclude_string (default: true)"
-        normalize_indels: "if true, split multi-allelic sites and left-align indels (default: true)"
+        fix_ploidy: "if true, correct multi-allelic genotypes where all reads support the alt "
+        filter_vcf: "if true, apply bcftools exclude filter using exclude_string "
+        normalize_indels: "if true, split multi-allelic sites and left-align indels "
         exclude_string: "bcftools exclude expression used when filter_vcf is true"
 
         # outputs
