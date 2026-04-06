@@ -1,6 +1,67 @@
 version 1.0
 
 workflow align_sr_rna {
+    meta {
+        description: "Align short-read RNA-seq reads to a reference genome using STAR"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_file_type: "'FASTQ', 'BAM', or 'CRAM'; determines how input reads are provided"
+        fastqs: "input FASTQ files; required when input_file_type is FASTQ"
+        cram_bam: "input BAM or CRAM file; required when input_file_type is BAM or CRAM"
+        crai_bai: "index of cram_bam"
+        ref_fasta: "reference FASTA used to decode CRAM input"
+        ref_fasta_index: "index of ref_fasta"
+        star_index: "tar.gz archive of the STAR genome index"
+        align_insertion_flush: "STAR --alignInsertionFlush"
+        align_intron_max: "STAR --alignIntronMax"
+        align_mates_gap_max: "STAR --alignMatesGapMax"
+        align_sjdb_overhang_min: "STAR --alignSJDBoverhangMin"
+        align_sj_stitch_mismatch_nmax: "STAR --alignSJstitchMismatchNmax"
+        align_spliced_mate_map_lmin: "STAR --alignSplicedMateMapLmin"
+        align_spliced_mate_map_lmin_over_lmate: "STAR --alignSplicedMateMapLminOverLmate"
+        chim_junction_overhang_min: "STAR --chimJunctionOverhangMin"
+        chim_multimap_nmax: "STAR --chimMultimapNmax"
+        chim_multimap_score_range: "STAR --chimMultimapScoreRange"
+        chim_nonchim_score_drop_min: "STAR --chimNonchimScoreDropMin"
+        chim_out_junction_format: "STAR --chimOutJunctionFormat"
+        chim_out_type: "STAR --chimOutType"
+        chim_score_junction_non_gtag: "STAR --chimScoreJunctionNonGTAG"
+        chim_segment_min: "STAR --chimSegmentMin"
+        genome_dir: "STAR --genomeDir"
+        genome_load: "STAR --genomeLoad"
+        limit_sjdb_insert_nsj: "STAR --limitSjdbInsertNsj"
+        out_filter_intron_motifs: "STAR --outFilterIntronMotifs"
+        out_filter_match_nmin: "STAR --outFilterMatchNmin"
+        out_filter_match_nmin_over_lread: "STAR --outFilterMatchNminOverLread"
+        out_filter_mismatch_nmax: "STAR --outFilterMismatchNmax"
+        out_filter_mismatch_nover_lmax: "STAR --outFilterMismatchNoverLmax"
+        out_filter_multimap_nmax: "STAR --outFilterMultimapNmax"
+        out_filter_score_min_over_lread: "STAR --outFilterScoreMinOverLread"
+        out_filter_type: "STAR --outFilterType"
+        out_reads_unmapped: "STAR --outReadsUnmapped"
+        out_sam_attr_rg_line: "STAR --outSAMattrRGline"
+        out_sam_attributes: "STAR --outSAMattributes"
+        out_sam_strand_field: "STAR --outSAMstrandField"
+        out_sam_type: "STAR --outSAMtype"
+        out_sam_unmapped: "STAR --outSAMunmapped"
+        pe_overlap_mmp: "STAR --peOverlapMMp"
+        pe_overlap_nbases_min: "STAR --peOverlapNbasesMin"
+        quant_mode: "STAR --quantMode"
+        read_files_command: "STAR --readFilesCommand"
+        twopass_mode: "STAR --twopassMode"
+        win_anchor_multimap_nmax: "STAR --winAnchorMultimapNmax"
+        extra_star_args: "additional STAR arguments appended verbatim to the STAR command"
+
+        # outputs
+        analysis_ready_bam: "genome-coordinate BAM of aligned reads"
+        junctions: "gzip-compressed TSV of splice junctions detected by STAR"
+        transcriptome_bam: "transcriptome-coordinate BAM for use with Salmon quantification"
+        reads_per_gene: "gzip-compressed TSV of per-gene read counts from STAR"
+    }
+
     input {
         String sample_id
         String input_file_type
@@ -111,6 +172,68 @@ workflow align_sr_rna {
 }
 
 task align_with_star {
+    meta {
+        description: "Align short-read RNA-seq reads to a reference genome using STAR"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_file_type: "'FASTQ', 'BAM', or 'CRAM'; determines how input reads are provided"
+        fastqs: "input FASTQ files; required when input_file_type is FASTQ"
+        cram_bam: "input BAM or CRAM file; required when input_file_type is BAM or CRAM"
+        crai_bai: "index of cram_bam"
+        ref_fasta: "reference FASTA used to decode CRAM input"
+        ref_fasta_index: "index of ref_fasta"
+        star_index: "tar.gz archive of the STAR genome index"
+        align_insertion_flush: "STAR --alignInsertionFlush"
+        align_intron_max: "STAR --alignIntronMax"
+        align_mates_gap_max: "STAR --alignMatesGapMax"
+        align_sjdb_overhang_min: "STAR --alignSJDBoverhangMin"
+        align_sj_stitch_mismatch_nmax: "STAR --alignSJstitchMismatchNmax"
+        align_spliced_mate_map_lmin: "STAR --alignSplicedMateMapLmin"
+        align_spliced_mate_map_lmin_over_lmate: "STAR --alignSplicedMateMapLminOverLmate"
+        chim_junction_overhang_min: "STAR --chimJunctionOverhangMin"
+        chim_multimap_nmax: "STAR --chimMultimapNmax"
+        chim_multimap_score_range: "STAR --chimMultimapScoreRange"
+        chim_nonchim_score_drop_min: "STAR --chimNonchimScoreDropMin"
+        chim_out_junction_format: "STAR --chimOutJunctionFormat"
+        chim_out_type: "STAR --chimOutType"
+        chim_score_junction_non_gtag: "STAR --chimScoreJunctionNonGTAG"
+        chim_segment_min: "STAR --chimSegmentMin"
+        genome_dir: "STAR --genomeDir"
+        genome_load: "STAR --genomeLoad"
+        limit_sjdb_insert_nsj: "STAR --limitSjdbInsertNsj"
+        out_filter_intron_motifs: "STAR --outFilterIntronMotifs"
+        out_filter_match_nmin: "STAR --outFilterMatchNmin"
+        out_filter_match_nmin_over_lread: "STAR --outFilterMatchNminOverLread"
+        out_filter_mismatch_nmax: "STAR --outFilterMismatchNmax"
+        out_filter_mismatch_nover_lmax: "STAR --outFilterMismatchNoverLmax"
+        out_filter_multimap_nmax: "STAR --outFilterMultimapNmax"
+        out_filter_score_min_over_lread: "STAR --outFilterScoreMinOverLread"
+        out_filter_type: "STAR --outFilterType"
+        out_reads_unmapped: "STAR --outReadsUnmapped"
+        out_sam_attr_rg_line: "STAR --outSAMattrRGline"
+        out_sam_attributes: "STAR --outSAMattributes"
+        out_sam_strand_field: "STAR --outSAMstrandField"
+        out_sam_type: "STAR --outSAMtype"
+        out_sam_unmapped: "STAR --outSAMunmapped"
+        pe_overlap_mmp: "STAR --peOverlapMMp"
+        pe_overlap_nbases_min: "STAR --peOverlapNbasesMin"
+        quant_mode: "STAR --quantMode"
+        read_files_command: "STAR --readFilesCommand"
+        twopass_mode: "STAR --twopassMode"
+        win_anchor_multimap_nmax: "STAR --winAnchorMultimapNmax"
+        extra_star_args: "additional STAR arguments appended verbatim to the STAR command"
+
+        # outputs
+        analysis_ready_bam: "genome-coordinate BAM of aligned reads"
+        junctions: "gzip-compressed TSV of splice junctions detected by STAR"
+        reads_per_gene: "gzip-compressed TSV of per-gene read counts from STAR"
+        transcriptome_bam: "transcriptome-coordinate BAM for use with Salmon quantification"
+    }
+
     input {
         String sample_id
         String input_file_type
@@ -282,9 +405,5 @@ task align_with_star {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }

@@ -1,6 +1,25 @@
 version 1.0
 
 workflow quantify_sr_rna {
+    meta {
+        description: "Quantify transcript and gene expression from a transcriptome BAM using Salmon"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        transcriptome_bam: "transcriptome-coordinate BAM produced by STAR"
+        targets: "FASTA of transcript sequences used as Salmon quantification targets"
+        gtf: "GTF annotation file used by Salmon to aggregate transcript-level estimates to gene level"
+        stranded: "if true, also run Salmon with automatic library type detection in addition to the unstranded IU run"
+
+        # outputs
+        quant_transcripts_auto: "Salmon transcript-level quantification TSV with automatic library type; only present when stranded is true"
+        quant_genes_auto: "Salmon gene-level quantification TSV with automatic library type; only present when stranded is true"
+        quant_transcripts_iu: "Salmon transcript-level quantification TSV using unstranded IU library type"
+        quant_genes_iu: "Salmon gene-level quantification TSV using unstranded IU library type"
+    }
+
     input {
         String sample_id
         File transcriptome_bam
@@ -38,6 +57,24 @@ workflow quantify_sr_rna {
 }
 
 task quantify_with_salmon {
+    meta {
+        description: "Quantify transcript and gene expression from a transcriptome BAM using Salmon"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        transcriptome_bam: "transcriptome-coordinate BAM produced by STAR"
+        targets: "FASTA of transcript sequences used as Salmon quantification targets"
+        gtf: "GTF annotation file used to aggregate transcript-level estimates to gene level"
+        lib_type: "Salmon library type string (e.g. 'A' for auto-detect, 'IU' for unstranded)"
+
+        # outputs
+        quant_transcripts: "Salmon transcript-level quantification TSV"
+        quant_genes: "Salmon gene-level quantification TSV"
+    }
+
     input {
         String sample_id
         File transcriptome_bam
@@ -94,9 +131,5 @@ task quantify_with_salmon {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }

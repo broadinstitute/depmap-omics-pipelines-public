@@ -1,6 +1,22 @@
 version 1.0
 
 workflow call_sr_rna_fusions {
+    meta {
+        description: "Call RNA fusion genes from a STAR-aligned BAM using Arriba"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        analysis_ready_bam: "genome-coordinate BAM produced by STAR alignment"
+        ref_fasta: "reference FASTA"
+        gtf: "GTF annotation file"
+
+        # outputs
+        fusions: "TSV of fusion gene candidates detected by Arriba"
+        fusions_discarded: "TSV of fusion candidates discarded by Arriba's filters"
+    }
+
     input {
         String sample_id
         File analysis_ready_bam
@@ -23,6 +39,23 @@ workflow call_sr_rna_fusions {
 }
 
 task call_fusions_with_arriba {
+    meta {
+        description: "Call RNA fusion genes from a STAR-aligned BAM using Arriba"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        analysis_ready_bam: "genome-coordinate BAM produced by STAR alignment"
+        ref_fasta: "reference FASTA"
+        gtf: "GTF annotation file"
+
+        # outputs
+        fusions: "TSV of fusion gene candidates detected by Arriba"
+        fusions_discarded: "TSV of fusion candidates discarded by Arriba's filters"
+    }
+
     input {
         String sample_id
         File analysis_ready_bam
@@ -67,9 +100,5 @@ task call_fusions_with_arriba {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }
