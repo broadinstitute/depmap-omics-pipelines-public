@@ -1,6 +1,39 @@
 version 1.0
 
 workflow call_lr_rna_fusions {
+    meta {
+        description: "Call RNA fusions from a long-read BAM using ctat-LR-fusion, optionally supported by matched short-read evidence"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bam: "long-read RNA-seq BAM to call fusions from"
+        max_n_reads: "optional maximum number of short-read pairs to use; input is downsampled if it exceeds this"
+        sr_sample_id: "ID of the matched short-read sample; required when sr_cram_or_bam is provided"
+        sr_cram_or_bam: "'BAM' or 'CRAM'; format of the matched short-read input file"
+        sr_cram_bam: "matched short-read BAM or CRAM file to provide additional fusion evidence"
+        sr_crai_bai: "index of sr_cram_bam"
+        sr_ref_fasta: "reference FASTA used to decode sr_cram_bam if it is a CRAM"
+        sr_ref_fasta_index: "index of sr_ref_fasta"
+        genome_lib_tar_with_star_idx: "tar archive of the CTAT genome library including a STAR index"
+        min_per_id: "minimum percent identity for a fusion-supporting alignment"
+        min_j: "minimum number of junction-spanning reads required to report a fusion"
+        min_sum_js: "minimum sum of junction and spanning read support"
+        min_novel_junction_support: "minimum reads required to support a novel (unannotated) junction"
+        fi_extra_params: "additional parameters passed verbatim to FusionInspector"
+
+        # outputs
+        fusion_report: "TSV of filtered fusion predictions from ctat-LR-fusion"
+        fusion_report_abridged: "abridged TSV of filtered fusion predictions"
+        prelim_fusion_report: "TSV of preliminary (pre-filter) fusion predictions"
+        prelim_fusion_report_abridged: "abridged TSV of preliminary fusion predictions"
+        fusion_report_html: "FusionInspector HTML report; only present when vis is true"
+        igv_tar: "tar.gz of IGV visualization files for fusion inspection; only present when vis is true"
+        used_sr_evidence: "true if matched short-read evidence was used in this run"
+        sr_cram_bam_used: "path to the short-read BAM or CRAM used, if any"
+    }
+
     input {
         String sample_id
         File input_bam
@@ -94,6 +127,26 @@ workflow call_lr_rna_fusions {
 }
 
 task sam_to_fastq {
+    meta {
+        description: "Convert a short-read BAM or CRAM to paired FASTQ files, with optional downsampling"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of the short-read sample"
+        cram_or_bam: "'BAM' or 'CRAM'; format of cram_bam"
+        cram_bam: "input BAM or CRAM file to convert"
+        crai_bai: "index of cram_bam"
+        ref_fasta: "reference FASTA used to decode cram_bam if it is a CRAM"
+        ref_fasta_index: "index of ref_fasta"
+        max_n_reads: "if provided, downsample each FASTQ to at most this many read pairs"
+
+        # outputs
+        fastq1: "FASTQ of read 1"
+        fastq2: "FASTQ of read 2"
+    }
+
     input {
         String sample_id
         String cram_or_bam
@@ -175,13 +228,39 @@ task sam_to_fastq {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task ctat_lr_fusion {
+    meta {
+        description: "Call RNA fusions from a long-read BAM using ctat-LR-fusion, optionally with short-read support"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bam: "long-read RNA-seq BAM to call fusions from"
+        genome_lib_tar: "tar archive of the CTAT genome library (with STAR index for short-read support mode)"
+        sr_fastq1: "short-read FASTQ read 1 for additional fusion evidence; enables short-read support mode"
+        sr_fastq2: "short-read FASTQ read 2 for additional fusion evidence"
+        sr_cram_bam_size_gb: "size of the original short-read BAM/CRAM in GiB, used for disk sizing"
+        min_per_id: "minimum percent identity for a fusion-supporting alignment"
+        min_j: "minimum number of junction-spanning reads required to report a fusion"
+        min_sum_js: "minimum sum of junction and spanning read support"
+        min_novel_junction_support: "minimum reads required to support a novel (unannotated) junction"
+        fi_extra_params: "additional parameters passed verbatim to FusionInspector"
+        no_ctat_mm2: "if true, skip the ctat-minimap2 alignment step"
+        vis: "if true, generate FusionInspector HTML report and IGV visualization files"
+
+        # outputs
+        fusion_report: "TSV of filtered fusion predictions"
+        fusion_report_abridged: "abridged TSV of filtered fusion predictions"
+        prelim_fusion_report: "TSV of preliminary (pre-filter) fusion predictions"
+        prelim_fusion_report_abridged: "abridged TSV of preliminary fusion predictions"
+        fusion_report_html: "FusionInspector HTML report; only present when vis is true"
+        igv_tar: "tar.gz of IGV visualization files for fusion inspection; only present when vis is true"
+    }
+
     input {
         String sample_id
         File input_bam
@@ -295,9 +374,5 @@ task ctat_lr_fusion {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }

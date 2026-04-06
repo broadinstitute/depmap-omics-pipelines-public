@@ -1,6 +1,22 @@
 version 1.0
 
 workflow align_lr_rna {
+    meta {
+        description: "Align long-read RNA-seq reads to a reference genome using minimap2"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bam: "input uBAM of long-read RNA-seq reads"
+        junc_bed: "BED file of known splice junctions used to guide minimap2 spliced alignment"
+        ref_fasta: "reference FASTA to align against"
+
+        # outputs
+        aligned_bam: "coordinate-sorted BAM of minimap2-aligned reads"
+        aligned_bai: "index of aligned_bam"
+    }
+
     input {
         String sample_id
         File input_bam
@@ -23,6 +39,23 @@ workflow align_lr_rna {
 }
 
 task minimap2 {
+    meta {
+        description: "Convert a long-read uBAM to FASTQ, align with minimap2, and sort and index the output BAM"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bam: "input uBAM of long-read RNA-seq reads"
+        junc_bed: "BED file of known splice junctions passed to minimap2 --junc-bed"
+        ref_fasta: "reference FASTA to align against"
+
+        # outputs
+        aligned_bam: "coordinate-sorted BAM of minimap2-aligned reads"
+        aligned_bai: "index of aligned_bam"
+    }
+
     input {
         String sample_id
         File input_bam
@@ -88,9 +121,5 @@ task minimap2 {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }

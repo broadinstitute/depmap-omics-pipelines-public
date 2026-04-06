@@ -1,6 +1,46 @@
 version 1.0
 
 workflow quantify_lr_rna {
+    meta {
+        description: "Quantify long-read RNA-seq expression with IsoQuant and classify transcripts with SQANTI3"
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bam: "coordinate-sorted long-read RNA-seq BAM"
+        input_bai: "index of input_bam"
+        sr_star_junctions: "optional STAR SJ.out.tab file from matched short-read data, used by SQANTI3 for junction support"
+        ref_fasta: "reference FASTA"
+        ref_annotation_gtf: "reference annotation GTF passed to SQANTI3"
+        ref_annotation_db: "IsoQuant annotation database built from the reference GTF"
+        data_type: "IsoQuant --data_type (e.g. 'nanopore' or 'pacbio_ccs')"
+        model_construction_strategy: "IsoQuant --model_construction_strategy"
+        stranded: "IsoQuant --stranded (e.g. 'forward', 'reverse', or 'none')"
+        transcript_quantification: "IsoQuant --transcript_quantification method"
+        gene_quantification: "IsoQuant --gene_quantification method"
+        report_novel_unspliced: "IsoQuant --report_novel_unspliced setting"
+        report_canonical: "IsoQuant --report_canonical setting"
+
+        # outputs
+        discovered_transcript_counts: "gzip-compressed TSV of read counts for IsoQuant-discovered transcripts"
+        discovered_transcript_tpm: "gzip-compressed TSV of TPM values for IsoQuant-discovered transcripts"
+        exon_counts: "gzip-compressed TSV of per-exon read counts"
+        extended_annotation: "gzip-compressed GTF of the extended annotation including novel transcripts"
+        gene_counts: "gzip-compressed TSV of per-gene read counts"
+        gene_tpm: "gzip-compressed TSV of per-gene TPM values"
+        intron_counts: "gzip-compressed TSV of per-intron read counts"
+        read_assignments: "gzip-compressed TSV of per-read transcript assignments"
+        sq_class: "SQANTI3 transcript classification TXT"
+        sq_junctions: "SQANTI3 junction annotation TXT"
+        sq_report_pdf: "SQANTI3 QC report PDF"
+        transcript_counts: "gzip-compressed TSV of per-transcript read counts for reference transcripts"
+        transcript_model_reads: "gzip-compressed TSV mapping transcript models to supporting reads"
+        transcript_tpm: "gzip-compressed TSV of per-transcript TPM values for reference transcripts"
+        used_sr_evidence: "true if matched short-read junction evidence was used in SQANTI3"
+        sr_star_junctions_used: "path to the short-read STAR junctions file used, if any"
+    }
+
     input {
         String sample_id
         File input_bam
@@ -66,6 +106,40 @@ workflow quantify_lr_rna {
 }
 
 task run_isoquant {
+    meta {
+        description: "Quantify long-read RNA-seq expression and discover novel transcripts using IsoQuant"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        input_bam: "coordinate-sorted long-read RNA-seq BAM"
+        input_bai: "index of input_bam"
+        ref_annotation_db: "IsoQuant annotation database built from the reference GTF"
+        ref_fasta: "reference FASTA"
+        data_type: "IsoQuant --data_type (e.g. 'nanopore' or 'pacbio_ccs')"
+        model_construction_strategy: "IsoQuant --model_construction_strategy"
+        stranded: "IsoQuant --stranded (e.g. 'forward', 'reverse', or 'none')"
+        transcript_quantification: "IsoQuant --transcript_quantification method"
+        gene_quantification: "IsoQuant --gene_quantification method"
+        report_novel_unspliced: "IsoQuant --report_novel_unspliced setting"
+        report_canonical: "IsoQuant --report_canonical setting"
+
+        # outputs
+        discovered_transcript_counts: "gzip-compressed TSV of read counts for IsoQuant-discovered transcripts"
+        discovered_transcript_tpm: "gzip-compressed TSV of TPM values for IsoQuant-discovered transcripts"
+        exon_counts: "gzip-compressed TSV of per-exon read counts"
+        extended_annotation: "gzip-compressed GTF of the extended annotation including novel transcripts"
+        gene_counts: "gzip-compressed TSV of per-gene read counts"
+        gene_tpm: "gzip-compressed TSV of per-gene TPM values"
+        intron_counts: "gzip-compressed TSV of per-intron read counts"
+        read_assignments: "gzip-compressed TSV of per-read transcript assignments"
+        transcript_counts: "gzip-compressed TSV of per-transcript read counts for reference transcripts"
+        transcript_model_reads: "gzip-compressed TSV mapping transcript models to supporting reads"
+        transcript_tpm: "gzip-compressed TSV of per-transcript TPM values for reference transcripts"
+    }
+
     input {
         String sample_id
         File input_bam
@@ -145,13 +219,28 @@ task run_isoquant {
         maxRetries: max_retries
         cpu: cpu
     }
-
-    meta {
-        allowNestedInputs: true
-    }
 }
 
 task run_sqanti3 {
+    meta {
+        description: "Classify and QC long-read transcripts from an IsoQuant GTF using SQANTI3"
+        allowNestedInputs: true
+    }
+
+    parameter_meta {
+        # inputs
+        sample_id: "ID of this sample"
+        isoquant_gtf: "gzip-compressed extended annotation GTF from IsoQuant"
+        sr_star_junctions: "optional STAR SJ.out.tab file from matched short-read data for junction support scoring"
+        ref_annotation_gtf: "reference annotation GTF"
+        ref_fasta: "reference FASTA"
+
+        # outputs
+        sq_junctions: "SQANTI3 junction annotation TXT"
+        sq_class: "SQANTI3 transcript classification TXT"
+        sq_report_pdf: "SQANTI3 QC report PDF"
+    }
+
     input {
         String sample_id
         File isoquant_gtf
@@ -215,9 +304,5 @@ task run_sqanti3 {
         preemptible: preemptible
         maxRetries: max_retries
         cpu: cpu
-    }
-
-    meta {
-        allowNestedInputs: true
     }
 }
