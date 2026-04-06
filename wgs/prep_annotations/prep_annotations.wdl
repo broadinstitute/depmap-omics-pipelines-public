@@ -54,6 +54,7 @@ workflow prep_annotations {
     if (defined(vcf_patch) && defined(patch_region_bed)) {
         call patch_vcf {
             input:
+                sample_id = sample_id,
                 vcf = select_first([compress_vcf.vcf_compressed, input_vcf]),
                 vcf_patch = select_first([vcf_patch]),
                 patch_region_bed = select_first([patch_region_bed]),
@@ -142,6 +143,7 @@ task patch_vcf {
 
     parameter_meta {
         # inputs
+        sample_id: "ID of this sample"
         vcf: "base VCF whose variants in patch_region_bed will be replaced"
         vcf_patch: "VCF of curated variants to substitute into patch_region_bed regions"
         patch_region_bed: "BED file of regions whose variants will be replaced"
@@ -152,6 +154,7 @@ task patch_vcf {
     }
 
     input {
+        String sample_id
         File vcf
         File vcf_patch
         File patch_region_bed
@@ -173,23 +176,28 @@ task patch_vcf {
     command <<<
         set -euo pipefail
 
-        echo "Reheadering vcf_patch to match sample name in vcf"
-        bcftools query -l "~{vcf}" > sample_name.txt
+        # original VCF gets its sample name from the BAM, while the patch uses CDS-*
+        echo "Reheadering VCFs to match sample names"
+
+        echo "~{sample_id}" > sample_name.txt
+        bcftools reheader --samples sample_name.txt "~{vcf}" \
+            --output vcf_reheadered.vcf.gz \
+            && rm "~{vcf}"
         bcftools reheader --samples sample_name.txt "~{vcf_patch}" \
             --output vcf_patch_reheadered.vcf.gz \
             && rm "~{vcf_patch}"
 
-        echo "Indexing input VCFs"
-        bcftools index -t "~{vcf}"
-        bcftools index -t vcf_patch_reheadered.vcf.gz
+        echo "Indexing reheadered VCFs"
+        bcftools index vcf_reheadered.vcf.gz
+        bcftools index vcf_patch_reheadered.vcf.gz
 
         echo "Removing variants in patch regions from the base VCF"
-        bcftools view "~{vcf}" \
+        bcftools view vcf_reheadered.vcf.gz \
             --targets-file "^~{patch_region_bed}" \
             --output base_filtered.vcf.gz \
-            && rm "~{vcf}"
+            && rm vcf_reheadered.vcf.gz
 
-        bcftools index -t base_filtered.vcf.gz
+        bcftools index base_filtered.vcf.gz
 
         echo "Concatenating base (with patch regions removed) and patch VCFs"
         bcftools concat \
