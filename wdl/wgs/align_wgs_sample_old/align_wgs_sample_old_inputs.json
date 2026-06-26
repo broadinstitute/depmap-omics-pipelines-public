@@ -1,0 +1,6 @@
+{
+  "align_wgs_sample_old.dbsnp_vcf": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf.gz",
+  "align_wgs_sample_old.dbsnp_vcf_index": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf.gz.tbi",
+  "align_wgs_sample_old.rerun_bqsr": true,
+  "align_wgs_sample_old.run_bqsr": true
+}
