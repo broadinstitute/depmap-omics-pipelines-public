@@ -1,0 +1,4 @@
+{
+  "call_mutations_ds.intervals": "gs://ccleparams/references/references_wgs_xy.intervals",
+  "call_mutations_ds.scatter_count": 50
+}

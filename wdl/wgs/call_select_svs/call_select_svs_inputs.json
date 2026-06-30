@@ -1,0 +1,15 @@
+{
+  "call_select_svs.annotate_structural_variants.gnomad": "gs://ccleparams/sv/gnomad.v4.1.sv.sites.pass.vcf.gz",
+  "call_select_svs.annotate_structural_variants.gnomad_idx": "gs://ccleparams/sv/gnomad.v4.1.sv.sites.pass.vcf.gz.tbi",
+  "call_select_svs.annotate_structural_variants.gtf_bed": "gs://ccleparams/gencode.v38.primary_assembly.CORRECTED_MISSING_IDs.annotation.GENES_ONLY.bed",
+  "call_select_svs.annotate_structural_variants.include_string": "(FILTER=\\\"PASS\\\"|FILTER=\\\"MaxDepth\\\") && (SUM(FORMAT/PR[0:1]+FORMAT/SR[0:1]) >= 5) && (CHROM!=\\\"chrM\\\") && (ALT!~\\\"chrM\\\")",
+  "call_select_svs.annotate_structural_variants.ref_fasta_bgz": "gs://ccleparams/references/Homo_sapiens.GRCh38.dna.primary_assembly.fa.bgz",
+  "call_select_svs.annotate_structural_variants.vep_chrom_cache_url_prefix": "gs://ccleparams/wgs/mutation/annotation/vep/v113/",
+  "call_select_svs.annotate_structural_variants.vep_chrom_cache_url_suffix": ".gz",
+  "call_select_svs.annotate_structural_variants.xy_intervals": "gs://ccleparams/references/references_wgs_xy.intervals",
+  "call_select_svs.call_structural_variants.is_major_contigs_only": true,
+  "call_select_svs.call_structural_variants.major_contig_bed": "gs://ccleparams/sv/manta_major_contigs.bed.gz",
+  "call_select_svs.call_structural_variants.major_contig_bed_index": "gs://ccleparams/sv/manta_major_contigs.bed.gz.tbi",
+  "call_select_svs.select_structural_variants.cosmic_fusion_gene_pairs": "gs://ccleparams/sv/cosmic_fusion_gene_pairs_2025-06-03.csv",
+  "call_select_svs.select_structural_variants.onco_tsg": "gs://ccleparams/sv/onco_tsg.tsv"
+}
