@@ -1,0 +1,11 @@
+{
+  "requantify_lr_rna.combined_sorted_gtf": "gs://fc-secure-d068ecea-bdcf-4e38-a449-edcd8933a71c/submissions/final-outputs/9859061a-3979-468a-9a37-a55c853a25bd/combine_gtfs/1a26f9d7-6ee3-4d2b-8c24-0da75c499ded/call-process_gtf/26q3_processed.gtf",
+  "requantify_lr_rna.data_type": "pacbio_ccs",
+  "requantify_lr_rna.gene_quantification": "unique_splicing_consistent",
+  "requantify_lr_rna.model_construction_strategy": "fl_pacbio",
+  "requantify_lr_rna.report_canonical": "auto",
+  "requantify_lr_rna.report_novel_unspliced": "true",
+  "requantify_lr_rna.stranded": "forward",
+  "requantify_lr_rna.transcript_quantification": "unique_only",
+  "requantify_lr_rna.updated_tracking_sq_filtered": "gs://fc-secure-d068ecea-bdcf-4e38-a449-edcd8933a71c/submissions/final-outputs/9859061a-3979-468a-9a37-a55c853a25bd/combine_gtfs/1a26f9d7-6ee3-4d2b-8c24-0da75c499ded/call-filter_gtf_and_tracking/26q3_updated_tracking_sq_filtered.parquet"
+}
