@@ -1,0 +1,4 @@
+{
+  "annotate_mutations_merge.vcf_to_duckdb_config": "gs://ccleparams/vcf_to_duckdb_config.json",
+  "annotate_mutations_merge.vcf_to_duckdb.batch_size": 100000
+}

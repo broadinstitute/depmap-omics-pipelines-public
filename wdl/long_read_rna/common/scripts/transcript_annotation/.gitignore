@@ -1,0 +1,13 @@
+# Downloaded references (see README.md)
+uniprot_sprot_varsplic.fasta
+Homo_sapiens.GRCh38.104.chr.gtf
+
+# Generated intermediates and outputs
+merged_annotations_all_git.csv
+Transcript_forportal_ptc.csv
+novel_transcripts.fa
+*_transcriptome.fa
+*_processed.gtf
+isoquant_entries.gtf
+unique_transcript_ids.txt
+merged_annotations_all_git_depmapomics.csv

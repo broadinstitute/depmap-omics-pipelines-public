@@ -1,0 +1,3 @@
+{
+  "fix_cnvs_gene_level.protein_coding_genes_bed": "gs://ccleparams/wgs_cnv/gencode.v38.primary_assembly.annotation.protein_coding_genes.bed"
+}

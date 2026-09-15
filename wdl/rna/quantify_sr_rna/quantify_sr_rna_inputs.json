@@ -1,0 +1,4 @@
+{
+  "quantify_sr_rna.gtf": "gs://ccleparams/rna/gencode.v38_with_viral_corrected.gtf",
+  "quantify_sr_rna.targets": "gs://ccleparams/rna/hg38_with_viral_transcripts_corrected.fa"
+}
