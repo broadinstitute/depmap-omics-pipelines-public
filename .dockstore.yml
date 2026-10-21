@@ -1,0 +1,320 @@
+version: 1.2
+workflows:
+  - subclass: WDL
+    name: align_lr_rna
+    readMePath: /wdl/long_read_rna/align_lr_rna/README.md
+    primaryDescriptorPath: /wdl/long_read_rna/align_lr_rna/align_lr_rna.wdl
+    testParameterFiles:
+      - /wdl/long_read_rna/align_lr_rna/align_lr_rna_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: call_lr_rna_fusions
+    readMePath: /wdl/long_read_rna/call_lr_rna_fusions/README.md
+    primaryDescriptorPath: /wdl/long_read_rna/call_lr_rna_fusions/call_lr_rna_fusions.wdl
+    testParameterFiles:
+      - /wdl/long_read_rna/call_lr_rna_fusions/call_lr_rna_fusions_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: combine_gtfs
+    readMePath: /wdl/long_read_rna/combine_gtfs/README.md
+    primaryDescriptorPath: /wdl/long_read_rna/combine_gtfs/combine_gtfs.wdl
+    testParameterFiles:
+      - /wdl/long_read_rna/combine_gtfs/combine_gtfs_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: quantify_lr_rna
+    readMePath: /wdl/long_read_rna/quantify_lr_rna/README.md
+    primaryDescriptorPath: /wdl/long_read_rna/quantify_lr_rna/quantify_lr_rna.wdl
+    testParameterFiles:
+      - /wdl/long_read_rna/quantify_lr_rna/quantify_lr_rna_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: requantify_lr_rna
+    readMePath: /wdl/long_read_rna/requantify_lr_rna/README.md
+    primaryDescriptorPath: /wdl/long_read_rna/requantify_lr_rna/requantify_lr_rna.wdl
+    testParameterFiles:
+      - /wdl/long_read_rna/requantify_lr_rna/requantify_lr_rna_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: align_sr_rna
+    readMePath: /wdl/rna/align_sr_rna/README.md
+    primaryDescriptorPath: /wdl/rna/align_sr_rna/align_sr_rna.wdl
+    testParameterFiles:
+      - /wdl/rna/align_sr_rna/align_sr_rna_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: call_sr_rna_fusions
+    readMePath: /wdl/rna/call_sr_rna_fusions/README.md
+    primaryDescriptorPath: /wdl/rna/call_sr_rna_fusions/call_sr_rna_fusions.wdl
+    testParameterFiles:
+      - /wdl/rna/call_sr_rna_fusions/call_sr_rna_fusions_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: process_sr_rna
+    readMePath: /wdl/rna/process_sr_rna/README.md
+    primaryDescriptorPath: /wdl/rna/process_sr_rna/process_sr_rna.wdl
+    testParameterFiles:
+      - /wdl/rna/process_sr_rna/process_sr_rna_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: quantify_sr_rna
+    readMePath: /wdl/rna/quantify_sr_rna/README.md
+    primaryDescriptorPath: /wdl/rna/quantify_sr_rna/quantify_sr_rna.wdl
+    testParameterFiles:
+      - /wdl/rna/quantify_sr_rna/quantify_sr_rna_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: align_wgs_sample
+    readMePath: /wdl/wgs/align_wgs_sample/README.md
+    primaryDescriptorPath: /wdl/wgs/align_wgs_sample/align_wgs_sample.wdl
+    testParameterFiles:
+      - /wdl/wgs/align_wgs_sample/align_wgs_sample_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: annotate_mutations
+    readMePath: /wdl/wgs/annotate_mutations/README.md
+    primaryDescriptorPath: /wdl/wgs/annotate_mutations/annotate_mutations.wdl
+    testParameterFiles:
+      - /wdl/wgs/annotate_mutations/annotate_mutations_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: annotate_mutations_merge
+    readMePath: /wdl/wgs/annotate_mutations_merge/README.md
+    primaryDescriptorPath: /wdl/wgs/annotate_mutations_merge/annotate_mutations_merge.wdl
+    testParameterFiles:
+      - /wdl/wgs/annotate_mutations_merge/annotate_mutations_merge_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: annotate_structural_variants
+    readMePath: /wdl/wgs/annotate_structural_variants/README.md
+    primaryDescriptorPath: /wdl/wgs/annotate_structural_variants/annotate_structural_variants.wdl
+    testParameterFiles:
+      - /wdl/wgs/annotate_structural_variants/annotate_structural_variants_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: bam_to_cram
+    readMePath: /wdl/wgs/bam_to_cram/README.md
+    primaryDescriptorPath: /wdl/wgs/bam_to_cram/bam_to_cram.wdl
+    testParameterFiles:
+      - /wdl/wgs/bam_to_cram/bam_to_cram_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: call_cnvs
+    readMePath: /wdl/wgs/call_cnvs/README.md
+    primaryDescriptorPath: /wdl/wgs/call_cnvs/call_cnvs.wdl
+    testParameterFiles:
+      - /wdl/wgs/call_cnvs/call_cnvs_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: call_mutations
+    readMePath: /wdl/wgs/call_mutations/README.md
+    primaryDescriptorPath: /wdl/wgs/call_mutations/call_mutations.wdl
+    testParameterFiles:
+      - /wdl/wgs/call_mutations/call_mutations_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: call_select_svs
+    readMePath: /wdl/wgs/call_select_svs/README.md
+    primaryDescriptorPath: /wdl/wgs/call_select_svs/call_select_svs.wdl
+    testParameterFiles:
+      - /wdl/wgs/call_select_svs/call_select_svs_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: call_structural_variants
+    readMePath: /wdl/wgs/call_structural_variants/README.md
+    primaryDescriptorPath: /wdl/wgs/call_structural_variants/call_structural_variants.wdl
+    testParameterFiles:
+      - /wdl/wgs/call_structural_variants/call_structural_variants_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: compute_molecular_signatures
+    readMePath: /wdl/wgs/compute_molecular_signatures/README.md
+    primaryDescriptorPath: /wdl/wgs/compute_molecular_signatures/compute_molecular_signatures.wdl
+    testParameterFiles:
+      - /wdl/wgs/compute_molecular_signatures/compute_molecular_signatures_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: cram_to_bam
+    readMePath: /wdl/wgs/cram_to_bam/README.md
+    primaryDescriptorPath: /wdl/wgs/cram_to_bam/cram_to_bam.wdl
+    testParameterFiles:
+      - /wdl/wgs/cram_to_bam/cram_to_bam_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: infer_msi_status
+    readMePath: /wdl/wgs/infer_msi_status/README.md
+    primaryDescriptorPath: /wdl/wgs/infer_msi_status/infer_msi_status.wdl
+    testParameterFiles:
+      - /wdl/wgs/infer_msi_status/infer_msi_status_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: make_guide_mutation_beds
+    readMePath: /wdl/wgs/make_guide_mutation_beds/README.md
+    primaryDescriptorPath: /wdl/wgs/make_guide_mutation_beds/make_guide_mutation_beds.wdl
+    testParameterFiles:
+      - /wdl/wgs/make_guide_mutation_beds/make_guide_mutation_beds_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: patch_hg38_bam
+    readMePath: /wdl/wgs/patch_hg38_bam/README.md
+    primaryDescriptorPath: /wdl/wgs/patch_hg38_bam/patch_hg38_bam.wdl
+    testParameterFiles:
+      - /wdl/wgs/patch_hg38_bam/patch_hg38_bam_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: patch_hg38_bam_call_muts
+    readMePath: /wdl/wgs/patch_hg38_bam_call_muts/README.md
+    primaryDescriptorPath: /wdl/wgs/patch_hg38_bam_call_muts/patch_hg38_bam_call_muts.wdl
+    testParameterFiles:
+      - /wdl/wgs/patch_hg38_bam_call_muts/patch_hg38_bam_call_muts_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: process_aligned_wgs
+    readMePath: /wdl/wgs/process_aligned_wgs/README.md
+    primaryDescriptorPath: /wdl/wgs/process_aligned_wgs/process_aligned_wgs.wdl
+    testParameterFiles:
+      - /wdl/wgs/process_aligned_wgs/process_aligned_wgs_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: prep_annotate_select_muts
+    readMePath: /wdl/wgs/prep_annotate_select_muts/README.md
+    primaryDescriptorPath: /wdl/wgs/prep_annotate_select_muts/prep_annotate_select_muts.wdl
+    testParameterFiles:
+      - /wdl/wgs/prep_annotate_select_muts/prep_annotate_select_muts_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: prep_annotations
+    readMePath: /wdl/wgs/prep_annotations/README.md
+    primaryDescriptorPath: /wdl/wgs/prep_annotations/prep_annotations.wdl
+    testParameterFiles:
+      - /wdl/wgs/prep_annotations/prep_annotations_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: select_somatic_variants
+    readMePath: /wdl/wgs/select_somatic_variants/README.md
+    primaryDescriptorPath: /wdl/wgs/select_somatic_variants/select_somatic_variants.wdl
+    testParameterFiles:
+      - /wdl/wgs/select_somatic_variants/select_somatic_variants_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True
+
+  - subclass: WDL
+    name: select_structural_variants
+    readMePath: /wdl/wgs/select_structural_variants/README.md
+    primaryDescriptorPath: /wdl/wgs/select_structural_variants/select_structural_variants.wdl
+    testParameterFiles:
+      - /wdl/wgs/select_structural_variants/select_structural_variants_inputs.json
+    filters:
+      branches:
+        - main
+    publish: True

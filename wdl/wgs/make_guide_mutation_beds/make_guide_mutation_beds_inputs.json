@@ -1,0 +1,8 @@
+{
+  "make_guide_mutation_beds.bed_avana": "gs://depmap-omics-public-ref/wgs/guides/avana_guides.bed",
+  "make_guide_mutation_beds.bed_brunello": "gs://depmap-omics-public-ref/wgs/guides/brunello_26q1.bed",
+  "make_guide_mutation_beds.bed_humagne": "gs://depmap-omics-public-ref/wgs/guides/humagne_guides.bed",
+  "make_guide_mutation_beds.bed_ky": "gs://depmap-omics-public-ref/wgs/guides/ky_score_guides.bed",
+  "make_guide_mutation_beds.bed_tko": "gs://depmap-omics-public-ref/wgs/guides/tko_26q1.bed",
+  "make_guide_mutation_beds.min_af": 0.4
+}

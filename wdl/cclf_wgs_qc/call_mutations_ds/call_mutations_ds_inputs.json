@@ -1,0 +1,4 @@
+{
+  "call_mutations_ds.intervals": "gs://depmap-omics-public-ref/wgs/references_wgs_xy.intervals",
+  "call_mutations_ds.scatter_count": 20
+}

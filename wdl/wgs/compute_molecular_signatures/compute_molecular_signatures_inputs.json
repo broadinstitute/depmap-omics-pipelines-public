@@ -1,0 +1,4 @@
+{
+  "compute_molecular_signatures.ref_2bit": "gs://depmap-omics-public-ref/wgs/Homo_sapiens_assembly38.2bit",
+  "compute_molecular_signatures.sa_ref": "pcawg_COMPOSITE"
+}

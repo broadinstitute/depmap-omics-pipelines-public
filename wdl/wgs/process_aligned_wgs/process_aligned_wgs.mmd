@@ -1,0 +1,38 @@
+flowchart TB
+    align["align_wgs_sample"]
+    to_cram["bam_to_cram"]
+
+    subgraph process_aligned_wgs
+        direction LR
+
+        cnvs["call_cnvs"]
+        msi["infer_msi_status"]
+
+        subgraph svs["call_select_svs"]
+            direction LR
+            svs_call["call_structural_variants"] --> svs_annot["annotate_structural_variants"] --> svs_select["select_structural_variants"]
+        end
+
+        muts["call_mutations"]
+
+        subgraph patch["patch_hg38_bam_call_muts"]
+            direction LR
+            patch_bam["patch_hg38_bam"] --> patch_muts["call_mutations"]
+        end
+
+        subgraph prep["prep_annotate_select_muts"]
+            direction LR
+            prep_annots["prep_annotations"] --> prep_annotate["annotate_mutations"] --> prep_merge["annotate_mutations_merge"] --> prep_select["select_somatic_variants"]
+        end
+
+        beds["make_guide_mutation_beds"]
+        sigs["compute_molecular_signatures"]
+
+        muts --> prep
+        patch --> prep
+        prep --> beds
+        prep --> sigs
+    end
+
+    align --> process_aligned_wgs
+    process_aligned_wgs --> to_cram

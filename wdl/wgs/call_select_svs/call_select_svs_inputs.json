@@ -1,0 +1,15 @@
+{
+  "call_select_svs.call_structural_variants.is_major_contigs_only": true,
+  "call_select_svs.cosmic_fusion_gene_pairs": "gs://depmap-omics-private-ref/wgs/sv/cosmic_fusion_gene_pairs_2025-06-03.csv",
+  "call_select_svs.gnomad": "gs://depmap-omics-public-ref/wgs/sv/gnomad.v4.1.sv.sites.pass.vcf.gz",
+  "call_select_svs.gnomad_idx": "gs://depmap-omics-public-ref/wgs/sv/gnomad.v4.1.sv.sites.pass.vcf.gz.tbi",
+  "call_select_svs.gtf_bed": "gs://depmap-omics-public-ref/wgs/sv/gencode.v38.primary_assembly.CORRECTED_MISSING_IDs.annotation.GENES_ONLY.bed",
+  "call_select_svs.include_string": "(FILTER=\"PASS\"|FILTER=\"MaxDepth\") && (SUM(FORMAT/PR[0:1]+FORMAT/SR[0:1]) >= 5) && (CHROM!=\"chrM\") && (ALT!~\"chrM\")",
+  "call_select_svs.major_contig_bed": "gs://depmap-omics-public-ref/wgs/sv/manta_major_contigs.bed.gz",
+  "call_select_svs.major_contig_bed_index": "gs://depmap-omics-public-ref/wgs/sv/manta_major_contigs.bed.gz.tbi",
+  "call_select_svs.onco_tsg": "gs://depmap-omics-private-ref/wgs/sv/onco_tsg.tsv",
+  "call_select_svs.ref_fasta_bgz": "gs://depmap-omics-public-ref/wgs/Homo_sapiens.GRCh38.dna.primary_assembly.fa.bgz",
+  "call_select_svs.vep_chrom_cache_url_prefix": "gs://depmap-omics-public-ref/wgs/mutations/vep/v113/",
+  "call_select_svs.vep_chrom_cache_url_suffix": ".gz",
+  "call_select_svs.xy_intervals": "gs://depmap-omics-public-ref/wgs/references_wgs_xy.intervals"
+}
