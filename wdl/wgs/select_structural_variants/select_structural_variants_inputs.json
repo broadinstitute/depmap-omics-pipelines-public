@@ -1,0 +1,4 @@
+{
+  "select_structural_variants.cosmic_fusion_gene_pairs": "gs://depmap-omics-private-ref/wgs/sv/cosmic_fusion_gene_pairs_2025-06-03.csv",
+  "select_structural_variants.onco_tsg": "gs://depmap-omics-private-ref/wgs/sv/onco_tsg.tsv"
+}

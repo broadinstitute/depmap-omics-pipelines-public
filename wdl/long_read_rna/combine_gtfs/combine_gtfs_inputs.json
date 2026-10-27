@@ -1,0 +1,3 @@
+{
+  "combine_gtfs.gencode_gtf": "gs://depmap-omics-public-ref/long-read-rna/gencode/v38/gencode.v38.primary_assembly.annotation.gtf"
+}

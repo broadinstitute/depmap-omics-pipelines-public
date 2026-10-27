@@ -1,0 +1,10 @@
+{
+  "annotate_structural_variants.gnomad": "gs://depmap-omics-public-ref/wgs/sv/gnomad.v4.1.sv.sites.pass.vcf.gz",
+  "annotate_structural_variants.gnomad_idx": "gs://depmap-omics-public-ref/wgs/sv/gnomad.v4.1.sv.sites.pass.vcf.gz.tbi",
+  "annotate_structural_variants.gtf_bed": "gs://depmap-omics-public-ref/wgs/sv/gencode.v38.primary_assembly.CORRECTED_MISSING_IDs.annotation.GENES_ONLY.bed",
+  "annotate_structural_variants.include_string": "(FILTER=\"PASS\"|FILTER=\"MaxDepth\") && (SUM(FORMAT/PR[0:1]+FORMAT/SR[0:1]) >= 5) && (CHROM!=\"chrM\") && (ALT!~\"chrM\")",
+  "annotate_structural_variants.ref_fasta_bgz": "gs://depmap-omics-public-ref/wgs/Homo_sapiens.GRCh38.dna.primary_assembly.fa.bgz",
+  "annotate_structural_variants.vep_chrom_cache_url_prefix": "gs://depmap-omics-public-ref/wgs/mutations/vep/v113/",
+  "annotate_structural_variants.vep_chrom_cache_url_suffix": ".gz",
+  "annotate_structural_variants.xy_intervals": "gs://depmap-omics-public-ref/wgs/references_wgs_xy.intervals"
+}

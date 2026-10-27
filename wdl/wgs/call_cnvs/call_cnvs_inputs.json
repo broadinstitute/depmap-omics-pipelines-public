@@ -1,0 +1,7 @@
+{
+  "call_cnvs.chrom_sizes": "gs://depmap-omics-public-ref/wgs/hg38.chrom.sizes",
+  "call_cnvs.gc_wig": "gs://depmap-omics-public-ref/wgs/cnv/hg38.1000.gc.bedgraph",
+  "call_cnvs.map_wig": "gs://depmap-omics-public-ref/wgs/cnv/hg38.1000.with_mean_mapscore.bed",
+  "call_cnvs.protein_coding_genes_bed": "gs://depmap-omics-public-ref/wgs/cnv/gencode.v38.primary_assembly.annotation.protein_coding_genes.bed",
+  "call_cnvs.wgs_bins_bed": "gs://depmap-omics-public-ref/wgs/cnv/hg38.1000.sorted.bed"
+}
